@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys, json; pkg = json.load\\(sys.stdin\\); print\\('main:', pkg.get\\('main'\\)\\); print\\('module:', pkg.get\\('module'\\)\\); print\\('exports:', json.dumps\\(pkg.get\\('exports', {}\\), indent=2\\)[:500]\\)\")",
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

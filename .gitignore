@@ -1,0 +1,27 @@
+# Dependencies
+agent/node_modules/
+
+# Environment variables
+.env
+agent/.env
+
+# TypeScript build output
+agent/dist/
+agent/build/
+
+# Generated runtime files (agent outputs)
+agent/files/research/*
+agent/files/drafts/*
+agent/files/output/*
+agent/logs/*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

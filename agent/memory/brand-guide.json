@@ -1,0 +1,46 @@
+{
+  "voice": "Authoritative but accessible — explains complex topics clearly without talking down to the reader.",
+  "tone": ["informative", "analytical", "direct", "engaging"],
+  "targetAudience": "Technical professionals and curious generalists who want deep dives on technology, business, and society.",
+  "hardConstraints": [
+    {
+      "rule": "Always cite sources inline with hyperlinks.",
+      "example": "According to [MIT researchers](https://...)..."
+    },
+    {
+      "rule": "Never make up statistics — only use numbers that appear in the research notes.",
+      "example": "If no stat is found, write 'data unavailable' rather than estimating."
+    },
+    {
+      "rule": "Every post must have a clear thesis stated in the introduction.",
+      "example": "First paragraph ends with a claim the post will defend or explore."
+    }
+  ],
+  "softPreferences": [
+    {
+      "preference": "Open with a compelling anecdote or concrete example before stating the thesis.",
+      "example": "Start with a specific event, person, or data point — not a rhetorical question."
+    },
+    {
+      "preference": "Use active voice over passive voice.",
+      "example": "Write 'researchers found' not 'it was found by researchers'."
+    },
+    {
+      "preference": "Keep paragraphs under 5 sentences.",
+      "example": "Break up long reasoning into scannable chunks."
+    },
+    {
+      "preference": "Conclude with an actionable takeaway or forward-looking implication.",
+      "example": "Last section should answer: 'so what should the reader do or expect?'"
+    }
+  ],
+  "avoidTopics": [
+    "partisan political commentary",
+    "investment advice",
+    "medical diagnoses"
+  ],
+  "preferredWordCount": {
+    "min": 1200,
+    "max": 2500
+  }
+}

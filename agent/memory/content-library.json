@@ -1,0 +1,38 @@
+[
+  {
+    "id": "c3a4f8e2-7b1d-4e9c-a6f3-2b8c1d5e9f7a",
+    "title": "How Likely Is AI to Transform Business Operations? The Evidence Is In — and It's Complicated",
+    "slug": "how-likely-is-ai-to-transform-business-operations",
+    "summary": "Enterprise AI adoption has reached striking breadth — 78% of companies now use AI in at least one business function — but meaningful transformation remains elusive for most organizations. This post examines the current state of adoption, function-by-function impact, the paradoxical ROI data, and what business leaders must do differently to move from pilot to real operational change.",
+    "keywords": ["AI business transformation", "enterprise AI adoption", "AI ROI", "generative AI business operations", "AI productivity"],
+    "publishedAt": "2026-04-01T00:00:00Z",
+    "outputFile": "files/output/2026-04-01-how-likely-is-ai-to-transform-business-operations.md",
+    "topic": "How Likely Is AI to Transform Business Operations?",
+    "wordCount": 1850,
+    "research_slugs": ["ai-adoption-current-state", "ai-core-business-functions", "ai-roi-productivity", "ai-barriers-future-outlook"]
+  },
+  {
+    "id": "a7f2c8e1-5d9b-4e3f-8c6a-1b7d9e4f5a2c",
+    "title": "The Best AI Assessment Tools for Employers: A Practical Comparison for 2026",
+    "slug": "best-ai-assessment-tools-for-employers",
+    "summary": "A practical comparison of the top AI assessment tools for employers in 2026 — covering HireVue, Pymetrics, TestGorilla, Codility, Harver, and more. Includes pricing, best-fit use cases, bias and compliance risks, real-world ROI benchmarks, and a five-question vendor evaluation framework.",
+    "keywords": ["AI assessment tools", "AI hiring tools", "pre-employment assessment", "AI recruiting tools", "skills-based hiring", "hiring bias", "candidate assessment software"],
+    "publishedAt": "2026-04-01T12:00:00.000Z",
+    "outputFile": "files/output/2026-04-01-best-ai-assessment-tools-for-employers.md",
+    "topic": "AI Assessment Tools for Employers",
+    "wordCount": 2150,
+    "research_slugs": ["ai-assessment-platforms", "hiring-compliance-regulation", "ai-bias-fairness", "recruitment-technology-roi"]
+  },
+  {
+    "id": "b8e4c9f2-6d7e-4a8f-9c1b-3d5f7e8a0c2e",
+    "title": "The 7 Best AI Assessment Tools for Employers in 2026",
+    "slug": "best-ai-assessment-tools-for-employers-listicle",
+    "summary": "A practitioner's comparison of seven leading AI assessment tools — HireVue, Pymetrics, Harver, TestGorilla, Codility, iMocha, and Criteria Corp — covering pricing, best-fit use cases, bias compliance notes, and a framework for choosing the right platform for your hiring team.",
+    "keywords": ["AI assessment tools", "AI hiring tools", "pre-employment assessment", "AI recruiting tools", "skills-based hiring", "hiring bias", "candidate assessment software"],
+    "publishedAt": "2026-04-01T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-01-best-ai-assessment-tools-for-employers-listicle.md",
+    "format": "listicle",
+    "wordCount": 1760,
+    "citationCount": 17
+  }
+]

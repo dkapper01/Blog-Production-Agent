@@ -1,0 +1,21 @@
+{
+  "name": "multi-agent-research",
+  "version": "0.1.0",
+  "description": "Simple multi-agent research system using Claude Agents SDK (TypeScript)",
+  "scripts": {
+    "start": "tsx src/agent.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.89",
+    "@inquirer/prompts": "^7",
+    "chalk": "^4",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
