@@ -5,7 +5,7 @@ A multi-agent system that researches a topic, writes a full blog post in your br
 ## Quick Start
 
 ```bash
-cd ts
+cd agent
 npm install
 
 # Add your API key
@@ -28,26 +28,26 @@ An interactive wizard collects your post parameters — topic, format, tone, lan
 
 ## Agents
 
-| Agent | Model | Tools | Purpose |
-|-------|-------|-------|---------|
-| **Coordinator** | Sonnet | `Task`, `Read`, `Glob` | Orchestrates the full pipeline |
-| **Researcher** | Haiku | `WebSearch`, `Write` | Researches one subtopic, writes `files/research/{slug}.json` |
-| **Outline** | Sonnet | `Glob`, `Read`, `Write` | Builds `files/drafts/outline.json` from all research |
-| **Writer** | Sonnet | `Glob`, `Read`, `Write` | Writes the full draft and citation map |
-| **SEO** | Haiku | `Read`, `Write` | Checks keyword density, headings, and readability |
-| **Editor** | Sonnet | `Read`, `Write` | Scores the draft; flags factual concerns |
-| **Publisher** | Haiku | `Glob`, `Read`, `Write` | Writes output files; updates content library |
+| Agent           | Model  | Tools                   | Purpose                                                      |
+| --------------- | ------ | ----------------------- | ------------------------------------------------------------ |
+| **Coordinator** | Sonnet | `Task`, `Read`, `Glob`  | Orchestrates the full pipeline                               |
+| **Researcher**  | Haiku  | `WebSearch`, `Write`    | Researches one subtopic, writes `files/research/{slug}.json` |
+| **Outline**     | Sonnet | `Glob`, `Read`, `Write` | Builds `files/drafts/outline.json` from all research         |
+| **Writer**      | Sonnet | `Glob`, `Read`, `Write` | Writes the full draft and citation map                       |
+| **SEO**         | Haiku  | `Read`, `Write`         | Checks keyword density, headings, and readability            |
+| **Editor**      | Sonnet | `Read`, `Write`         | Scores the draft; flags factual concerns                     |
+| **Publisher**   | Haiku  | `Glob`, `Read`, `Write` | Writes output files; updates content library                 |
 
 ## Wizard Options
 
-| Question | Options |
-|----------|---------|
-| **Format** | Let agent decide / Explainer / How-to / Listicle / Opinion / Case study |
-| **Language** | English only / Turkish only / Both (dual independent posts) |
-| **Tone** | Informative & analytical / Conversational / Bold & opinionated / Practical & tactical |
-| **Audience** | Brand guide default or custom description |
-| **Keywords** | Agent decides or comma-separated list |
-| **Word count** | Short (~800–1,200) / Standard (~1,200–2,000) / Long (~2,000–2,500) |
+| Question       | Options                                                                               |
+| -------------- | ------------------------------------------------------------------------------------- |
+| **Format**     | Let agent decide / Explainer / How-to / Listicle / Opinion / Case study               |
+| **Language**   | English only / Turkish only / Both (dual independent posts)                           |
+| **Tone**       | Informative & analytical / Conversational / Bold & opinionated / Practical & tactical |
+| **Audience**   | Brand guide default or custom description                                             |
+| **Keywords**   | Agent decides or comma-separated list                                                 |
+| **Word count** | Short (~800–1,200) / Standard (~1,200–2,000) / Long (~2,000–2,500)                    |
 
 Your format, language, tone, and word count preferences are saved between sessions.
 
