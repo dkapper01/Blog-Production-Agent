@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { select, input, confirm } from '@inquirer/prompts';
 import { loadBrandGuide } from '../memory/brandVoice';
+import { loadLibrary } from '../memory/contentLibrary';
 import type { IntakeAnswers, WizardDefaults, WizardFormat, WizardLanguage, WizardTone, WizardWordCount } from './types';
 import { TONE_LABELS, WORD_COUNT_RANGES } from './types';
 
@@ -30,12 +31,69 @@ function loadDefaults(): WizardDefaults {
 
 function saveDefaults(answers: IntakeAnswers): void {
   const defaults: WizardDefaults = {
-    format:    answers.format,
-    language:  answers.language,
-    tone:      answers.tone,
-    wordCount: answers.wordCount,
+    format:           answers.format,
+    language:         answers.language,
+    tone:             answers.tone,
+    wordCount:        answers.wordCount,
+    generateAltFormat: answers.generateAltFormat,
   };
   fs.writeFileSync(DEFAULTS_PATH, JSON.stringify(defaults, null, 2), 'utf-8');
+}
+
+// ---------------------------------------------------------------------------
+// Duplicate detection (#10)
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns up to 3 existing library entries whose titles+keywords share
+ * ≥3 words with the given topic (case-insensitive, ignores stop words).
+ */
+const STOP_WORDS = new Set([
+  'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+  'of', 'with', 'by', 'from', 'is', 'are', 'was', 'be', 'how', 'what',
+  'why', 'when', 'do', 'does', 'it', 'its', 'as', 'if', 'that', 'this',
+]);
+
+function tokenize(text: string): Set<string> {
+  return new Set(
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length > 2 && !STOP_WORDS.has(w)),
+  );
+}
+
+interface SimilarPost {
+  title: string;
+  publishedAt: string;
+  overlap: number;
+}
+
+function findSimilarPosts(topic: string): SimilarPost[] {
+  try {
+    const library = loadLibrary();
+    const topicTokens = tokenize(topic);
+    const similar: SimilarPost[] = [];
+
+    for (const entry of library) {
+      const entryTokens = tokenize(
+        `${entry.title} ${entry.keywords.join(' ')} ${entry.summary}`,
+      );
+      const overlap = [...topicTokens].filter((w) => entryTokens.has(w)).length;
+      if (overlap >= 3) {
+        similar.push({
+          title: entry.title,
+          publishedAt: entry.publishedAt.slice(0, 10),
+          overlap,
+        });
+      }
+    }
+
+    return similar.sort((a, b) => b.overlap - a.overlap).slice(0, 3);
+  } catch {
+    return [];
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -53,10 +111,31 @@ export async function runWizard(): Promise<IntakeAnswers> {
   console.log('  Use arrow keys to select, Enter to confirm.\n');
 
   // ── 1. Topic ──────────────────────────────────────────────────────────────
-  const topic = await input({
-    message: 'What topic do you want to write about?',
-    validate: (v) => v.trim().length > 0 || 'Please enter a topic.',
-  });
+  let topic = '';
+  while (true) {
+    topic = await input({
+      message: 'What topic do you want to write about?',
+      validate: (v) => v.trim().length > 0 || 'Please enter a topic.',
+    });
+
+    // Duplicate detection
+    const similar = findSimilarPosts(topic);
+    if (similar.length > 0) {
+      console.log('');
+      for (const post of similar) {
+        console.log(`  ⚠  Similar post found: "${post.title}" (${post.publishedAt})`);
+      }
+      const proceed = await confirm({
+        message: 'Continue with this topic anyway?',
+        default: true,
+      });
+      if (proceed) break;
+      // else: re-prompt for topic
+      console.log('');
+    } else {
+      break;
+    }
+  }
 
   // ── 2. Format ─────────────────────────────────────────────────────────────
   const formatChoices: Array<{ name: string; value: WizardFormat; description?: string }> = [
@@ -138,24 +217,51 @@ export async function runWizard(): Promise<IntakeAnswers> {
     default: defaults.wordCount ?? 'standard',
   });
 
-  const answers: IntakeAnswers = { topic, format, language, tone, targetAudience, keywords, wordCount };
+  // ── 8. Alternative format (#8) ────────────────────────────────────────────
+  const altFormatChoices: Array<{ name: string; value: boolean; description?: string }> = [
+    { value: true,  name: 'Yes — produce a second version',  description: 'e.g. a listicle if the primary is an explainer (runs after the primary)' },
+    { value: false, name: 'No — primary post only',          description: 'Skip the alternative format step' },
+  ];
+  const generateAltFormat = await select<boolean>({
+    message: 'Generate alternative format?',
+    choices: altFormatChoices,
+    default: defaults.generateAltFormat ?? true,
+  });
+
+  // ── 9. Outline review (#7) ────────────────────────────────────────────────
+  const reviewChoices: Array<{ name: string; value: boolean; description?: string }> = [
+    { value: false, name: 'No — run fully automatically',       description: 'Agent writes without interruption' },
+    { value: true,  name: 'Yes — pause after outline for review', description: 'See the section plan before writing starts' },
+  ];
+  const reviewOutline = await select<boolean>({
+    message: 'Review outline before writing?',
+    choices: reviewChoices,
+    default: false,
+  });
+
+  const answers: IntakeAnswers = {
+    topic, format, language, tone, targetAudience, keywords,
+    wordCount, generateAltFormat, reviewOutline,
+  };
 
   // ── Summary ───────────────────────────────────────────────────────────────
   console.log('\n' + '─'.repeat(50));
   console.log('  Summary');
   console.log('─'.repeat(50));
-  console.log(`  Topic:    ${topic}`);
-  console.log(`  Format:   ${format === 'agent-decide' ? 'Let the agent decide' : format}`);
-  console.log(`  Language: ${{ en: 'English only', tr: 'Turkish only', both: 'English + Turkish' }[language]}`);
-  console.log(`  Tone:     ${TONE_LABELS[tone]}`);
-  console.log(`  Audience: ${targetAudience ?? `${brandGuide.targetAudience} (default)`}`);
-  console.log(`  Keywords: ${keywords ? keywords.join(', ') : 'Agent decides'}`);
-  console.log(`  Length:   ${WORD_COUNT_RANGES[wordCount].label}`);
+  console.log(`  Topic:      ${topic}`);
+  console.log(`  Format:     ${format === 'agent-decide' ? 'Let the agent decide' : format}`);
+  console.log(`  Language:   ${{ en: 'English only', tr: 'Turkish only', both: 'English + Turkish' }[language]}`);
+  console.log(`  Tone:       ${TONE_LABELS[tone]}`);
+  console.log(`  Audience:   ${targetAudience ?? `${brandGuide.targetAudience} (default)`}`);
+  console.log(`  Keywords:   ${keywords ? keywords.join(', ') : 'Agent decides'}`);
+  console.log(`  Length:     ${WORD_COUNT_RANGES[wordCount].label}`);
+  console.log(`  Alt format: ${generateAltFormat ? 'Yes' : 'No'}`);
+  console.log(`  Review:     ${reviewOutline ? 'Pause after outline' : 'Fully automatic'}`);
   console.log('─'.repeat(50) + '\n');
 
   // ── Save defaults? ────────────────────────────────────────────────────────
   const wantsSave = await confirm({
-    message: 'Save format, language, tone, and word count as your defaults?',
+    message: 'Save format, language, tone, word count, and alt-format preference as defaults?',
     default: false,
   });
   if (wantsSave) {
@@ -214,6 +320,14 @@ export function buildPromptString(answers: IntakeAnswers): string {
 
   const wc = WORD_COUNT_RANGES[answers.wordCount];
   lines.push(`Word count: ${answers.wordCount} (${wc.min}–${wc.max} words)`);
+
+  if (!answers.generateAltFormat) {
+    lines.push('[SKIP_ALT_FORMAT]');
+  }
+
+  if (answers.reviewOutline) {
+    lines.push('[PAUSE_AFTER_OUTLINE]');
+  }
 
   return lines.join('\n');
 }

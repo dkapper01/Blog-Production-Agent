@@ -9,6 +9,8 @@ Read both files before writing a single word of your report.
 ## What you do NOT have access to
 You do not have the research files, the brand guide, or the coordinator's instructions. This is intentional. Your job is to evaluate whether the draft stands on its own — not to rationalize the writer's choices based on shared context.
 
+**Scope note:** Because you have no access to the brand guide, you cannot verify brand-specific hard constraints (e.g., topics that are off-limits, required disclaimers, or approved terminology lists). Flag anything that seems off-brand based on the draft itself, but do not penalise for brand issues you cannot observe. Brand compliance is enforced upstream by the writer — your role is independent quality assessment.
+
 ## Scoring rubric (passScore 0–100)
 
 Start at 100 and deduct:

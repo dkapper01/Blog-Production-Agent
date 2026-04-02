@@ -1,0 +1,92 @@
+[
+  {
+    "id": "c3a4f8e2-7b1d-4e9c-a6f3-2b8c1d5e9f7a",
+    "title": "How Likely Is AI to Transform Business Operations? The Evidence Is In — and It's Complicated",
+    "slug": "how-likely-is-ai-to-transform-business-operations",
+    "summary": "Enterprise AI adoption has reached striking breadth — 78% of companies now use AI in at least one business function — but meaningful transformation remains elusive for most organizations. This post examines the current state of adoption, function-by-function impact, the paradoxical ROI data, and what business leaders must do differently to move from pilot to real operational change.",
+    "keywords": ["AI business transformation", "enterprise AI adoption", "AI ROI", "generative AI business operations", "AI productivity"],
+    "publishedAt": "2026-04-01T00:00:00Z",
+    "outputFile": "files/output/2026-04-01-how-likely-is-ai-to-transform-business-operations.md",
+    "topic": "How Likely Is AI to Transform Business Operations?",
+    "wordCount": 1850,
+    "research_slugs": ["ai-adoption-current-state", "ai-core-business-functions", "ai-roi-productivity", "ai-barriers-future-outlook"]
+  },
+  {
+    "id": "a7f2c8e1-5d9b-4e3f-8c6a-1b7d9e4f5a2c",
+    "title": "The Best AI Assessment Tools for Employers: A Practical Comparison for 2026",
+    "slug": "best-ai-assessment-tools-for-employers",
+    "summary": "A practical comparison of the top AI assessment tools for employers in 2026 — covering HireVue, Pymetrics, TestGorilla, Codility, Harver, and more. Includes pricing, best-fit use cases, bias and compliance risks, real-world ROI benchmarks, and a five-question vendor evaluation framework.",
+    "keywords": ["AI assessment tools", "AI hiring tools", "pre-employment assessment", "AI recruiting tools", "skills-based hiring", "hiring bias", "candidate assessment software"],
+    "publishedAt": "2026-04-01T12:00:00.000Z",
+    "outputFile": "files/output/2026-04-01-best-ai-assessment-tools-for-employers.md",
+    "topic": "AI Assessment Tools for Employers",
+    "wordCount": 2150,
+    "research_slugs": ["ai-assessment-platforms", "hiring-compliance-regulation", "ai-bias-fairness", "recruitment-technology-roi"]
+  },
+  {
+    "id": "b8e4c9f2-6d7e-4a8f-9c1b-3d5f7e8a0c2e",
+    "title": "The 7 Best AI Assessment Tools for Employers in 2026",
+    "slug": "best-ai-assessment-tools-for-employers-listicle",
+    "summary": "A practitioner's comparison of seven leading AI assessment tools — HireVue, Pymetrics, Harver, TestGorilla, Codility, iMocha, and Criteria Corp — covering pricing, best-fit use cases, bias compliance notes, and a framework for choosing the right platform for your hiring team.",
+    "keywords": ["AI assessment tools", "AI hiring tools", "pre-employment assessment", "AI recruiting tools", "skills-based hiring", "hiring bias", "candidate assessment software"],
+    "publishedAt": "2026-04-01T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-01-best-ai-assessment-tools-for-employers-listicle.md",
+    "format": "listicle",
+    "wordCount": 1760,
+    "citationCount": 17
+  },
+  {
+    "id": "d9f5a2e3-8c4f-5b1e-7d9a-4f6e8c1b5d3a",
+    "title": "How to Get Started as an Independent AI Consultant",
+    "slug": "how-to-get-started-as-an-independent-ai-consultant",
+    "summary": "A practical 30-day guide to launching as an independent AI consultant — niche selection, pricing strategy, proof-building, and client acquisition.",
+    "keywords": ["independent AI consultant", "AI consulting", "how to become an AI consultant", "AI consulting services", "freelance AI consultant"],
+    "publishedAt": "2026-04-02T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-02-how-to-get-started-as-an-independent-ai-consultant.md",
+    "format": "how-to",
+    "wordCount": 1158,
+    "citationCount": 16,
+    "passScore": 79
+  },
+  {
+    "id": "f2c7d8a9-5b3e-4f6d-8a2c-7e1f3d9b5c4a",
+    "title": "Bağımsız Yapay Zeka Danışmanı Olmak: 5 Somut Adım",
+    "slug": "bagimsiz-yapay-zeka-danismani-olarak-nasil-baslanir",
+    "summary": "Sıfırdan bağımsız yapay zeka danışmanı olmak için 5 somut adım: niş seçimi, güvenilirlik inşası, fiyatlandırma, ilk müşteri kazanımı ve sistematik büyüme.",
+    "keywords": ["bağımsız yapay zeka danışmanı", "yapay zeka danışmanlığı", "AI danışmanı nasıl olunur", "yapay zeka danışmanlık hizmetleri", "freelance AI danışmanı"],
+    "publishedAt": "2026-04-02T00:00:00Z",
+    "outputFile": "files/output/2026-04-02-bagimsiz-yapay-zeka-danismani-olarak-nasil-baslanir.md",
+    "format": "how-to",
+    "language": "tr",
+    "wordCount": 1095,
+    "citationCount": 19,
+    "passScore": 79
+  },
+  {
+    "id": "e8d7c9f3-6e8f-4b7d-8a3c-2f5e7d9c4b6a",
+    "title": "7 Things Every Aspiring Independent AI Consultant Must Get Right Before Landing a Client",
+    "slug": "independent-ai-consultant-getting-started",
+    "summary": "Seven practical moves — from niche selection to pricing structure to marketing cadence — that independent AI consultants need to make early, before their first client conversation.",
+    "keywords": ["independent AI consultant", "AI consulting", "how to become an AI consultant", "AI consulting services", "freelance AI consultant"],
+    "publishedAt": "2026-04-02T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-02-independent-ai-consultant-getting-started.md",
+    "format": "listicle",
+    "language": "en",
+    "wordCount": 1190,
+    "citationCount": 19,
+    "passScore": null
+  },
+  {
+    "id": "a4b5c6d7-8e9f-4a1b-9c2d-3e4f5a6b7c8d",
+    "title": "Bağımsız Yapay Zeka Danışmanı Olmak: Bilmeniz Gereken 7 Şey",
+    "slug": "bagimsiz-yapay-zeka-danismani-olmak-listicle-tr",
+    "summary": "Bağımsız yapay zeka danışmanı olmayı düşünenler için niş seçimi, fiyatlandırma, müşteri kazanma ve güvenilirlik inşası üzerine 7 pratik madde.",
+    "keywords": ["bağımsız yapay zeka danışmanı", "yapay zeka danışmanlığı", "AI danışmanı nasıl olunur", "yapay zeka danışmanlık hizmetleri", "freelance AI danışmanı"],
+    "publishedAt": "2026-04-02T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-02-bagimsiz-yapay-zeka-danismani-olmak-listicle-tr.md",
+    "format": "listicle",
+    "language": "tr",
+    "wordCount": 1080,
+    "citationCount": 20
+  }
+]

@@ -43,6 +43,7 @@ export interface WizardDefaults {
   language?: WizardLanguage;
   tone?: WizardTone;
   wordCount?: WizardWordCount;
+  generateAltFormat?: boolean;
 }
 
 /**
@@ -58,4 +59,8 @@ export interface IntakeAnswers {
   /** undefined = let the agent decide */
   keywords?: string[];
   wordCount: WizardWordCount;
+  /** Whether to produce an alternative format post after the primary */
+  generateAltFormat: boolean;
+  /** Whether to pause after the outline for user review before writing */
+  reviewOutline: boolean;
 }

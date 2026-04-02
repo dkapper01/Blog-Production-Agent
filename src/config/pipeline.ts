@@ -23,6 +23,51 @@ export function ensureOutputDirs(): void {
   }
 }
 
+/** Clear generated files from the previous run so stale data never bleeds in */
+export function clearRunFiles(): void {
+  for (const dir of ['files/research', 'files/drafts']) {
+    if (fs.existsSync(dir)) {
+      for (const file of fs.readdirSync(dir)) {
+        const filePath = path.join(dir, file);
+        if (fs.statSync(filePath).isFile()) {
+          fs.unlinkSync(filePath);
+        }
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Checkpoint utilities
+// ---------------------------------------------------------------------------
+
+export interface Checkpoint {
+  stage: string;
+  completedAt: string;
+  runTopic: string;
+}
+
+const CHECKPOINT_PATH = path.join(process.cwd(), 'files', 'checkpoint.json');
+
+export function loadCheckpoint(): Checkpoint | null {
+  try {
+    if (fs.existsSync(CHECKPOINT_PATH)) {
+      return JSON.parse(fs.readFileSync(CHECKPOINT_PATH, 'utf-8')) as Checkpoint;
+    }
+  } catch {
+    // Corrupt checkpoint — ignore
+  }
+  return null;
+}
+
+export function deleteCheckpoint(): void {
+  try {
+    if (fs.existsSync(CHECKPOINT_PATH)) fs.unlinkSync(CHECKPOINT_PATH);
+  } catch {
+    // Best-effort
+  }
+}
+
 export interface PipelineSetup {
   baseOptions: Options;
   tracker: SubagentTracker;

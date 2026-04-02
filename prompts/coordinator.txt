@@ -87,6 +87,16 @@ Spawn one `researcher` subagent per subtopic using the Task tool. Run them in pa
 
 Research is language-agnostic. Both language branches in a dual run read the same research files.
 
+After all researchers complete, write a checkpoint using the Write tool:
+`files/checkpoint.json` → `{ "stage": "Research", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
+
+### Step 3.5 — Verify research consistency
+After all researchers complete, use the Read tool to load every `files/research/*.json` file. Scan across files for contradictory statistics on the same subject (e.g., two files citing different growth rates for the same metric). For each conflict:
+- Note the conflicting claim and which files contain it
+- Prefer the value with the higher confidence score
+
+Pass a "Known data conflicts to resolve" section to every outline agent's task prompt listing any conflicts found, or "No data conflicts detected" if none. The outline agent must use the higher-confidence value in `targetFacts` and note the discrepancy.
+
 ### Step 4 — Spawn outline agents
 After ALL researchers complete:
 
@@ -99,6 +109,11 @@ After ALL researchers complete:
 - The list of research slugs written in Step 3
 - Output path: `files/drafts/outline.json`
 
+After the outline agent completes, write a checkpoint:
+`files/checkpoint.json` → `{ "stage": "Outline", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
+
+**If `[PAUSE_AFTER_OUTLINE]` appears in the original request:** After the outline agent completes and the checkpoint is written, read the outline file and output a formatted list of its section headings with one-line descriptions. Then output the exact marker `[AWAITING_OUTLINE_APPROVAL]` and stop. Do not proceed to Step 5 until the user sends an approval message.
+
 **Dual-language run:** Spawn one `outline` subagent per language **in the same response** (parallel). Pass each:
 - The target topic
 - The post format (same format for both branches)
@@ -107,6 +122,11 @@ After ALL researchers complete:
 - Target audience: for the EN outline, use the brand guide default; for the TR outline, add: "Tailor for a Turkish professional audience — prefer Turkey-specific data points and local business context where the research supports it. Turkish readers want global insights filtered through local applicability."
 - The list of research slugs
 - Output path: `files/drafts/outline-en.json` or `files/drafts/outline-tr.json`
+
+After both outline agents complete, write a checkpoint:
+`files/checkpoint.json` → `{ "stage": "Outline", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
+
+**If `[PAUSE_AFTER_OUTLINE]` appears in the original request:** After both outline agents complete and the checkpoint is written, read both outline files and output a formatted list of section headings for each language. Then output the exact marker `[AWAITING_OUTLINE_APPROVAL]` and stop.
 
 ### Step 5 — Spawn writers
 After the outline agent(s) complete:
@@ -128,6 +148,9 @@ After the outline agent(s) complete:
 - The target topic
 - Language: `en` or `tr` respectively
 
+After all writer(s) complete, write a checkpoint:
+`files/checkpoint.json` → `{ "stage": "Writing", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
+
 ### Step 6 — Spawn editors and SEO agents in parallel
 After all writer(s) complete:
 
@@ -147,6 +170,8 @@ Do NOT pass the brand guide, voice guide, research files, outline, or any other 
 **Dual-language run:** Read both editorial reports and both SEO analyses. Triage each branch **independently** — a revision or re-draft in one branch does not affect the other. Run each branch's triage concurrently where possible.
 
 **Triage logic (applies to each branch independently):**
+
+Before applying triage, verify that the SEO analysis file for the branch exists and contains valid data. If `files/drafts/seo-analysis.json` (or the language-suffixed equivalent) is missing or empty, re-spawn the `seo` agent for that branch before proceeding with triage.
 
 **passScore ≥ 85 — proceed**
 Continue to Step 8 for this branch.
@@ -192,7 +217,12 @@ After each branch passes triage:
 - Audience model path: `memory/audience-model.json`
 - Language: `en` or `tr` respectively
 
+After all primary publisher(s) complete, write a checkpoint:
+`files/checkpoint.json` → `{ "stage": "Publishing", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
+
 ### Step 9 — Generate alternative format(s)
+**If `[SKIP_ALT_FORMAT]` appears in the original request, skip this step entirely and proceed to Step 10.**
+
 After all primary publisher(s) complete, produce alternative format posts from the same research.
 
 Choose the alternative format:
@@ -230,7 +260,9 @@ Include the language label (e.g. "tr explainer") so examples are easy to identif
 If both branches scored ≥ 85, append both examples (EN first, then TR). Each gets its own numbered entry.
 
 #### 10b — Report to the user
-Once all publishers complete, report:
+Once all publishers complete (and the alternative format, if produced), delete `files/checkpoint.json` using the Write tool by writing an empty marker, or by noting deletion in the report — the host process handles the actual deletion on clean exit.
+
+Report:
 
 **For each language produced:**
 - Post title

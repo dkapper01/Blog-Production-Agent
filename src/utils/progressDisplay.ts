@@ -127,11 +127,25 @@ export class ProgressDisplay {
   // Live line state
   private liveLine = '';
 
-  constructor(topic: string, format: WizardFormat, language: WizardLanguage) {
+  constructor(
+    topic: string,
+    format: WizardFormat,
+    language: WizardLanguage,
+    timingOverrides: Partial<Record<string, number>> = {},
+  ) {
     this.topic = topic.length > 55 ? topic.slice(0, 52) + '...' : topic;
     this.format = format === 'agent-decide' ? 'auto' : format;
     this.language = language;
     this.isDual = language === 'both';
+
+    // Merge real timing data into estimates (requires ≥2 data points — ensured by logParser)
+    for (const [stage, avgSecs] of Object.entries(timingOverrides)) {
+      if (avgSecs === undefined || !(stage in STAGE_ESTIMATES_SINGLE)) continue;
+      (STAGE_ESTIMATES_SINGLE as Record<string, number>)[stage] = Math.round(avgSecs);
+      // Dual-language stages (except Research, which runs once) take ~30% longer
+      (STAGE_ESTIMATES_DUAL as Record<string, number>)[stage] =
+        stage === 'Research' ? Math.round(avgSecs) : Math.round(avgSecs * 1.3);
+    }
   }
 
   // ---------------------------------------------------------------------------

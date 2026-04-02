@@ -1,19 +1,19 @@
 # Dependencies
-agent/node_modules/
+node_modules/
 
 # Environment variables
 .env
-agent/.env
 
 # TypeScript build output
-agent/dist/
-agent/build/
+dist/
+build/
 
 # Generated runtime files (agent outputs)
-agent/files/research/*
-agent/files/drafts/*
-agent/files/output/*
-agent/logs/*
+files/research/*
+files/drafts/*
+files/output/*
+files/.session
+logs/*
 
 # IDE
 .vscode/

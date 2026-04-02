@@ -54,21 +54,20 @@ The agent uses Claude (an AI model by Anthropic) to do its work. You need an API
 
 ### 2b. Add your API key to the project
 
-1. Open the `ts` folder of this project
-2. Find the file named `.env` (if it doesn't exist, create a new file with that exact name)
-3. Add this line to the file, replacing `your-key-here` with the key you copied:
+1. In the project root, find the file named `.env` (if it doesn't exist, create a new file with that exact name)
+2. Add this line to the file, replacing `your-key-here` with the key you copied:
 
 ```
 ANTHROPIC_API_KEY=your-key-here
 ```
 
-4. Save the file
+3. Save the file
 
 > **Important:** Never share your `.env` file or your API key with anyone. Treat it like a password.
 
 ### 2c. Install the dependencies
 
-Open a terminal, navigate to the `ts` folder, and run:
+Open a terminal, navigate to the project root, and run:
 
 ```
 npm install
@@ -81,7 +80,7 @@ This downloads everything the agent needs to work. It only takes a minute and on
 ## 3. Starting a session
 
 1. Open a terminal
-2. Navigate to the `ts` folder
+2. Navigate to the project root
 3. Run:
 
 ```
@@ -458,7 +457,7 @@ The transcript is a plain-text file you can open in any editor. The tool calls f
 ### "ANTHROPIC_API_KEY not found"
 
 The agent cannot find your API key. Check that:
-1. The file `agent/.env` exists
+1. The file `.env` exists in the project root
 2. It contains a line that starts with `ANTHROPIC_API_KEY=`
 3. The key itself is correct — no extra spaces, no quotes around the value
 
@@ -468,7 +467,7 @@ The agent will print a clear description of what failed and at which stage. Comm
 
 - **Network issue** — The agent retries automatically on temporary connection errors. If it fails after multiple retries, check your internet connection and try again.
 - **API rate limit** — If you run the agent many times in quick succession, you may hit Anthropic's rate limits. Wait a minute and try again.
-- **File not found** — If the agent says it can't find `memory/brand-guide.json` or `memory/gulcan-voice.md`, make sure those files exist in the `agent/memory/` folder.
+- **File not found** — If the agent says it can't find `memory/brand-guide.json` or `memory/gulcan-voice.md`, make sure those files exist in the `memory/` folder at the project root.
 
 ### The agent pauses and asks about "factual flags"
 

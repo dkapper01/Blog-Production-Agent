@@ -5,7 +5,6 @@ A multi-agent system that researches a topic, writes a full blog post in your br
 ## Quick Start
 
 ```bash
-cd agent
 npm install
 
 # Add your API key
@@ -93,6 +92,6 @@ logs/
 ## Requirements
 
 - Node.js 18+
-- `ANTHROPIC_API_KEY` in `agent/.env`
+- `ANTHROPIC_API_KEY` in `.env`
 
-See [USER_GUIDE.md](agent/USER_GUIDE.md) for detailed usage instructions.
+See [USER_GUIDE.md](USER_GUIDE.md) for detailed usage instructions.
