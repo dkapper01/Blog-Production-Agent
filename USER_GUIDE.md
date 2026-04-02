@@ -266,6 +266,9 @@ The agent reads your request and breaks the topic into 3–5 focused angles to r
 ### Stage 2 — Research (1–3 minutes)
 The agent researches each angle simultaneously — gathering facts, statistics, and sources from across the web. Each researcher saves its findings to a file in `files/research/`. Every fact gets a confidence rating so the agent knows which claims are well-supported and which need hedging.
 
+### Stage 2.5 — Conflict resolution (seconds)
+Before anything is written, the coordinator reads every research file and scans for contradictory statistics — for example, two researchers citing different growth rates for the same metric. When a conflict is found, the higher-confidence value is preferred and the discrepancy is flagged for the outline agent so it uses the correct figure and notes the conflict in the draft.
+
 ### Stage 3 — Outline (30–60 seconds)
 A dedicated outline agent reads all the research and builds a structured plan for the post: section headings, key points, which facts belong where, and which keywords to place in each section.
 
@@ -273,10 +276,11 @@ A dedicated outline agent reads all the research and builds a structured plan fo
 The writer reads the outline and the research and writes the full draft. It also produces a `citations.json` file that maps every claim in the post back to its source, and a `draft-meta.json` file with the post's title, slug, word count, and other metadata.
 
 ### Stage 5 — Editorial review (30–60 seconds)
-Two reviewers run simultaneously:
+Three reviewers run simultaneously:
 
 - **The editor** reads only the draft — no research, no brand guide. This gives it an independent perspective, like a fresh pair of eyes. It scores the post on clarity, accuracy, brand voice, and flow (0–100). Scores below 85 trigger automatic rework — either a targeted revision (65–84) or a full re-draft (<65). See Stage 6 for details.
 - **The SEO reviewer** checks keyword coverage, heading structure, and readability, and suggests meta descriptions.
+- **The brand checker** validates the draft against the hard constraints and topic blocklist in `memory/brand-guide.json`. Any hard violation blocks publishing, regardless of the editorial score.
 
 ### Stage 6 — Revisions (if needed)
 If the editorial score is 65–84, the agent revises the draft and re-runs the editorial review. It does this at most twice before proceeding. If the score is below 65 on a first attempt, it rewrites the post from scratch. The agent will not publish a post that scores below 65 after a full rewrite.
@@ -497,7 +501,7 @@ If the agent completed but nothing appeared in `files/output/`, check:
 
 ## 11. Tips for best results
 
-**Be specific about your topic.** Vague topics produce vague posts. "AI in healthcare" will produce a broad survey. "How AI-assisted diagnostics are reducing misdiagnosis rates in radiology" will produce a focused, usable piece.
+**Be specific about your topic — but not too narrow in scope.** Vague topics produce vague posts, but very broad topics carry a different risk: the coordinator breaks them into 3–5 subtopics and assigns one researcher per subtopic. If the topic is wide enough to have many distinct dimensions (clinical, regulatory, economic, ethical), the coordinator may focus on some and miss others entirely — no agent has a mandate to notice the gap. A well-scoped topic is specific enough to have a clear argument but narrow enough that 3–5 angles give full coverage. "How AI-assisted diagnostics are reducing misdiagnosis rates in radiology" is better than "AI in healthcare" and better than "the role of AI in improving radiology diagnostic accuracy in urban hospitals in the United States between 2022 and 2024".
 
 **Name the audience.** "For HR managers evaluating new tools" tells the agent who it's writing for and shapes every word choice, example, and recommendation.
 

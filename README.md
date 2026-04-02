@@ -20,22 +20,36 @@ An interactive wizard collects your post parameters — topic, format, tone, lan
 
 1. **Coordinator** decomposes the topic into 3–5 research angles
 2. **Researchers** run in parallel, searching the web and saving structured findings to `files/research/`
-3. **Outline agent** reads all research and produces a section-by-section plan with SEO assignments
-4. **Writer** drafts the post in Markdown using the outline and research
-5. **Editor** + **SEO reviewer** run in parallel — editor scores the draft (0–100); posts below 85 are sent back for revision
-6. **Publisher** produces all output files and updates the content library
+3. **Coordinator** reads all research files, detects conflicting statistics, and resolves them by confidence score before passing a clean fact set to the outline agent
+4. **Outline agent** reads all research and produces a section-by-section plan with SEO assignments
+5. **Writer** drafts the post in Markdown using the outline and research
+6. **Editor** + **SEO reviewer** + **Brand checker** run in parallel — editor scores the draft (0–100); posts below 85 are sent back for revision; brand violations block publishing
+7. **Publisher** produces all output files and updates the content library
+
+## Architecture
+
+The system uses a **hub-and-spoke architecture**. The coordinator is the hub: it owns all routing decisions, error handling, triage logic, and inter-agent communication. Subagents are the spokes: stateless executors that receive only the files relevant to their task and write results back to disk.
+
+Subagents do not inherit the coordinator's conversation history. Every subagent starts fresh with only its own system prompt plus whatever context the coordinator explicitly injects into its task prompt (brand guide, voice guide, prior coverage list, etc.). This isolation keeps each subagent focused and prevents context bleed between stages.
+
+The coordinator is responsible for:
+- **Decomposition** — breaking the topic into 3–5 subtopics narrow enough for one researcher each
+- **Delegation** — deciding which agents to spawn, in what order, and in parallel where possible
+- **Aggregation** — reading all subagent outputs from disk and synthesising them into the next stage's inputs
+- **Triage** — applying pass/revise/redraft thresholds and brand compliance rules before publishing
 
 ## Agents
 
-| Agent           | Model  | Tools                   | Purpose                                                      |
-| --------------- | ------ | ----------------------- | ------------------------------------------------------------ |
-| **Coordinator** | Sonnet | `Task`, `Read`, `Glob`  | Orchestrates the full pipeline                               |
-| **Researcher**  | Haiku  | `WebSearch`, `Write`    | Researches one subtopic, writes `files/research/{slug}.json` |
-| **Outline**     | Sonnet | `Glob`, `Read`, `Write` | Builds `files/drafts/outline.json` from all research         |
-| **Writer**      | Sonnet | `Glob`, `Read`, `Write` | Writes the full draft and citation map                       |
-| **SEO**         | Haiku  | `Read`, `Write`         | Checks keyword density, headings, and readability            |
-| **Editor**      | Sonnet | `Read`, `Write`         | Scores the draft; flags factual concerns                     |
-| **Publisher**   | Haiku  | `Glob`, `Read`, `Write` | Writes output files; updates content library                 |
+| Agent             | Model  | Tools                         | Purpose                                                             |
+| ----------------- | ------ | ----------------------------- | ------------------------------------------------------------------- |
+| **Coordinator**   | Sonnet | `Task`, `Read`, `Glob`        | Orchestrates the full pipeline; all routing and triage decisions    |
+| **Researcher**    | Haiku  | `WebSearch`, `WebFetch`, `Write` | Researches one subtopic, writes `files/research/{slug}.json`     |
+| **Outline**       | Sonnet | `Glob`, `Read`, `Write`       | Builds `files/drafts/outline.json` from all research                |
+| **Writer**        | Sonnet | `Glob`, `Read`, `Write`       | Writes the full draft and citation map                              |
+| **SEO**           | Haiku  | `Read`, `Write`               | Checks keyword density, headings, and readability                   |
+| **Editor**        | Sonnet | `Read`, `Write`               | Scores the draft (0–100); flags factual concerns; sees draft only   |
+| **Brand Checker** | Haiku  | `Read`, `Write`               | Validates hard constraints and topic blocklist against brand guide   |
+| **Publisher**     | Haiku  | `Glob`, `Read`, `Write`       | Writes output files; updates content library                        |
 
 ## Wizard Options
 
