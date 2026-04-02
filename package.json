@@ -4,6 +4,7 @@
   "description": "Simple multi-agent research system using Claude Agents SDK (TypeScript)",
   "scripts": {
     "start": "tsx src/agent.ts",
+    "stats": "tsx src/utils/stats.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },

@@ -25,6 +25,7 @@ Use the base paths (no language suffix):
 | Citations | `files/drafts/citations.json` |
 | Editorial report | `files/drafts/editorial-report.json` |
 | SEO analysis | `files/drafts/seo-analysis.json` |
+| Brand report | `files/drafts/brand-report.json` |
 | Alt-format outline | `files/drafts/outline-{format}.json` |
 | Alt-format draft | `files/drafts/draft-{format}.md` |
 
@@ -39,6 +40,7 @@ Use language-suffixed paths for all draft artifacts:
 | Citations | `files/drafts/citations-en.json` | `files/drafts/citations-tr.json` |
 | Editorial report | `files/drafts/editorial-report-en.json` | `files/drafts/editorial-report-tr.json` |
 | SEO analysis | `files/drafts/seo-analysis-en.json` | `files/drafts/seo-analysis-tr.json` |
+| Brand report | `files/drafts/brand-report-en.json` | `files/drafts/brand-report-tr.json` |
 | Alt-format outline | `files/drafts/outline-en-{format}.json` | `files/drafts/outline-tr-{format}.json` |
 | Alt-format draft | `files/drafts/draft-en-{format}.md` | `files/drafts/draft-tr-{format}.md` |
 
@@ -66,11 +68,12 @@ Carry the `languages` array through every subsequent step.
 **Topic decomposition:**
 Break the user's topic into 3–5 focused subtopics that, together, give comprehensive coverage. Each subtopic should be narrow enough for one researcher to cover in depth.
 
-### Step 2 — Load brand config and audience model
-Use the Read tool to load all three files before spawning any subagents:
+### Step 2 — Load brand config, audience model, and content library
+Use the Read tool to load all four files before spawning any subagents:
 - memory/brand-guide.json
 - memory/gulcan-voice.md
 - memory/audience-model.json
+- memory/content-library.json
 
 You must pass both the brand guide JSON and the voice guide text to every writer in its task prompt.
 
@@ -79,11 +82,14 @@ Use the audience model to inform your decisions:
 - If `topPerformingKeywords` is non-empty, treat them as bonus keywords to include alongside any user-specified keywords — pass them to the outline agent as "audience-resonant keywords"
 - If the audience model is empty (no signals yet), proceed with defaults
 
+**Prior coverage scan:** After loading the content library, scan each entry's `title`, `summary`, and `keywords` for overlap with the current topic. Consider an entry relevant if it shares a key term, named concept, or directly related subject with the topic or any of its subtopics. Collect matching entries as a **prior coverage list** — each entry should note: title, slug, a one-sentence summary of what angle was covered, and the keywords. If no entries match, the prior coverage list is empty.
+
 ### Step 3 — Spawn researchers in parallel
 Spawn one `researcher` subagent per subtopic using the Task tool. Run them in parallel (all Task calls in one response). Each researcher's prompt must include:
 - The specific subtopic to investigate
 - The slug to use for the output file (kebab-case, e.g. "market-growth-trends")
 - Instruction to write output to files/research/{slug}.json as valid SubtopicFindings JSON
+- The prior coverage list from Step 2 (or "No prior coverage" if empty)
 
 Research is language-agnostic. Both language branches in a dual run read the same research files.
 
@@ -107,6 +113,7 @@ After ALL researchers complete:
 - Target keywords (user-specified + audience-resonant keywords from audience model)
 - Target audience (from brand guide or user override)
 - The list of research slugs written in Step 3
+- The prior coverage list from Step 2, with instruction: "Gülcan has previously covered these angles. Choose section framing that builds on or differentiates from prior posts — do not repeat arguments already made."
 - Output path: `files/drafts/outline.json`
 
 After the outline agent completes, write a checkpoint:
@@ -151,18 +158,25 @@ After the outline agent(s) complete:
 After all writer(s) complete, write a checkpoint:
 `files/checkpoint.json` → `{ "stage": "Writing", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
 
-### Step 6 — Spawn editors and SEO agents in parallel
+### Step 6 — Spawn editors, SEO agents, and brand checker in parallel
 After all writer(s) complete:
 
-**Single-language run:** Spawn editor + SEO agent in the same response.
+**Single-language run:** Spawn editor + SEO agent + brand-checker in the same response (three agents in parallel).
 
-**Dual-language run:** Spawn all four agents in the same response (parallel):
+Pass to the `brand-checker`:
+- The draft path for this branch
+- The full contents of `memory/brand-guide.json` pasted inline in the task prompt
+- Output path: `files/drafts/brand-report.json`
+
+**Dual-language run:** Spawn all six agents in the same response (parallel):
 - EN `editor` — receives ONLY: `files/drafts/draft-en.md` and `files/drafts/draft-meta-en.json`
 - EN `seo` — receives: `files/drafts/draft-en.md`, `files/drafts/draft-meta-en.json`, target keywords
+- EN `brand-checker` — receives: `files/drafts/draft-en.md` and brand-guide.json inline; output path: `files/drafts/brand-report-en.json`
 - TR `editor` — receives ONLY: `files/drafts/draft-tr.md` and `files/drafts/draft-meta-tr.json`
 - TR `seo` — receives: `files/drafts/draft-tr.md`, `files/drafts/draft-meta-tr.json`, target keywords
+- TR `brand-checker` — receives: `files/drafts/draft-tr.md` and brand-guide.json inline; output path: `files/drafts/brand-report-tr.json`
 
-Do NOT pass the brand guide, voice guide, research files, outline, or any other context to any editor. Context must be isolated.
+Do NOT pass the brand guide, voice guide, research files, outline, or any other context to any editor. Context must be isolated. The brand-checker is the only agent in this step that receives brand-guide.json.
 
 ### Step 7 — Editorial triage
 **Single-language run:** Read the single editorial report and SEO analysis. Apply triage as below.
@@ -172,6 +186,22 @@ Do NOT pass the brand guide, voice guide, research files, outline, or any other 
 **Triage logic (applies to each branch independently):**
 
 Before applying triage, verify that the SEO analysis file for the branch exists and contains valid data. If `files/drafts/seo-analysis.json` (or the language-suffixed equivalent) is missing or empty, re-spawn the `seo` agent for that branch before proceeding with triage.
+
+**Brand compliance check:** Read `files/drafts/brand-report.json` (or the language-suffixed equivalent). If `blocksPublishing: true`:
+- Do NOT proceed to Step 8 for this branch until violations are resolved
+- Add each `hardViolation` and `topicFlag` to the writer's revision instructions as explicit requirements to fix, listed before all editorial issues
+- After the writer revision, re-spawn the `brand-checker` for this branch and verify `blocksPublishing` is `false` before proceeding
+- If `softAdvisories` are present but `blocksPublishing: false`, include them as low-priority notes at the end of the revision instructions
+
+**Word count guard:** Read `draft-meta.json` (or the language-suffixed equivalent) and check `wordCount` against the user's target range:
+
+| Target | Range |
+|--------|-------|
+| short | 800–1,200 words |
+| standard | 1,200–2,000 words |
+| long | 2,000–2,500 words |
+
+If the draft's `wordCount` exceeds the upper bound by more than 30%, prepend the following to the writer's revision instructions (before any editorial issues): "The draft is {wordCount} words — target is {lower}–{upper}. Cut to fit the target range before addressing any editorial issues." This instruction must appear first so the writer prioritises length before content fixes.
 
 **passScore ≥ 85 — proceed**
 Continue to Step 8 for this branch.
@@ -183,13 +213,14 @@ Spawn the `writer` again with:
 - The SEO analysis for this branch — highlight any missingKeywords
 - The current draft path for this branch
 - Instruction to address every issue in `revisionPriority` in order
+- If the SEO analysis shows keyword density for the primary keyword is below 0.5%, explicitly instruct the writer to increase usage of that keyword throughout the draft
 
 After revision, spawn the `editor` and `seo` for this branch again in parallel and re-read both reports.
 - If the new passScore ≥ 85: proceed to Step 8 for this branch.
-- If still < 85 after two revision passes: proceed anyway and note the score in the final report.
+- If still < 85 after two revision passes: proceed anyway and note `requiresRevision: true` and the final passScore in the final report.
 
 **passScore < 65 — full re-draft**
-Spawn the `writer` with a full re-draft instruction. Pass the editorial report and SEO analysis so the writer understands what failed. After the re-draft, spawn editor + SEO in parallel.
+Spawn the `writer` with a full re-draft instruction. Pass the editorial report and SEO analysis so the writer understands what failed. If the SEO analysis shows keyword density for the primary keyword is below 0.5%, include that as an explicit requirement. After the re-draft, spawn editor + SEO in parallel.
 - If the new passScore ≥ 65: continue with normal triage.
 - If still < 65: stop this branch and report the failure. Do NOT publish this language. The other language branch may still proceed.
 

@@ -21,7 +21,7 @@ export function buildAgentDefinitions(): Record<string, AgentDefinition> {
         'Writes a structured JSON file to files/research/{slug}.json containing ' +
         'facts, citations, and a prose summary. ' +
         'Use one researcher per subtopic for parallel coverage.',
-      tools: ['WebSearch', 'Write'],
+      tools: ['WebSearch', 'WebFetch', 'Write'],
       prompt: loadPrompt('researcher.txt'),
       model: 'haiku',
     },
@@ -71,6 +71,18 @@ export function buildAgentDefinitions(): Record<string, AgentDefinition> {
       tools: ['Read', 'Write'],
       prompt: loadPrompt('editor.txt'),
       model: 'sonnet',
+    },
+
+    'brand-checker': {
+      description:
+        'Checks a blog draft for compliance with the brand guide hard constraints, ' +
+        'soft preferences, and topic blocklist. Receives the draft path and brand-guide.json ' +
+        'content inline — no research files, no voice guide, no coordinator history. ' +
+        'Writes a brand-report.json with hardViolations, softAdvisories, and topicFlags. ' +
+        'Run concurrently with the editor and SEO agent after the writer completes.',
+      tools: ['Read', 'Write'],
+      prompt: loadPrompt('brand-checker.txt'),
+      model: 'haiku',
     },
 
     publisher: {
