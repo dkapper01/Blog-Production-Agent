@@ -98,7 +98,7 @@ export function buildPipelineSetup(
     allowedTools: ['Task', 'Read', 'Glob'],
     agents: buildAgentDefinitions(),
     hooks,
-    model: 'sonnet',
+    model: 'haiku',
   };
 
   return { baseOptions, tracker };

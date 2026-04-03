@@ -225,7 +225,7 @@ export async function runWizard(): Promise<IntakeAnswers> {
   const generateAltFormat = await select<boolean>({
     message: 'Generate alternative format?',
     choices: altFormatChoices,
-    default: defaults.generateAltFormat ?? true,
+    default: defaults.generateAltFormat ?? false,
   });
 
   // ── 9. Outline review (#7) ────────────────────────────────────────────────
