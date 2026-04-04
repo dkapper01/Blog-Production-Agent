@@ -278,7 +278,9 @@ Pass the same instructions to TR alternative outlines as to the TR primary: "Tai
 ### Step 10 — Update voice guide and report to the user
 
 #### 10a — Brand voice learning (if any branch passScore ≥ 85)
-For each branch where passScore ≥ 85, read that branch's draft and extract one paragraph (3–6 sentences) that best exemplifies Gülcan's voice. Read memory/gulcan-voice.md and insert the example between `<!-- EXAMPLES_START -->` and `<!-- EXAMPLES_END -->`:
+For each branch where passScore ≥ 85, read that branch's draft and extract one paragraph (3–6 sentences) that best exemplifies Gülcan's voice. Read memory/gulcan-voice.md and insert the example between `<!-- EXAMPLES_START -->` and `<!-- EXAMPLES_END -->`.
+
+**Example cap:** The block between `<!-- EXAMPLES_START -->` and `<!-- EXAMPLES_END -->` must never exceed 5 entries. Before appending a new example, count the existing entries (each begins with `### Example`). If there are already 5, remove the oldest entry (the one with the lowest N) before appending the new one. Renumber the remaining entries so they run consecutively from 1.
 
 ```
 ### Example {N}: {language} {format} — "{topic}" (passScore: {score})

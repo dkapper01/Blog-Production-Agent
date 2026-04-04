@@ -70,6 +70,21 @@ export class LLMSession {
           }
         }
 
+        // Cache diagnostic — log prompt cache activity whenever the SDK reports it.
+        // cache_creation_input_tokens > 0 means tokens were written to cache this turn (1.25x cost).
+        // cache_read_input_tokens > 0 means tokens were served from cache this turn (0.1x cost).
+        // If both are always 0 across a full run, prompt caching is not active for this agent.
+        const usage = (m['usage'] ?? (m['message'] as Record<string, unknown> | undefined)?.['usage']) as Record<string, unknown> | undefined;
+        if (usage) {
+          const cacheWrite = usage['cache_creation_input_tokens'] as number | undefined;
+          const cacheRead  = usage['cache_read_input_tokens']     as number | undefined;
+          if ((cacheWrite ?? 0) > 0 || (cacheRead ?? 0) > 0) {
+            process.stderr.write(
+              `[cache] write=${cacheWrite ?? 0} read=${cacheRead ?? 0} uncached=${usage['input_tokens'] ?? '?'}\n`,
+            );
+          }
+        }
+
         onMessage(msg);
       }
     }, 'LLMSession.send');

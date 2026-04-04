@@ -107,9 +107,29 @@ async function main(): Promise<void> {
       transcript.writeToFile(`\n[Intake answers]\n${prompt}\n`);
 
       let coordinatorReport = '';
+      let runCostUsd = 0;
+      let runModelUsage: Record<string, { costUSD: number; inputTokens: number; outputTokens: number }> = {};
 
       const runTurn = async (p: string): Promise<void> => {
         await llm.send(p, baseOptions, (msg) => {
+          const m = msg as Record<string, unknown>;
+
+          // Capture final cost from the SDK result message
+          if (m['type'] === 'result') {
+            runCostUsd += (m['total_cost_usd'] as number | undefined) ?? 0;
+            const modelUsage = m['modelUsage'] as Record<string, Record<string, unknown>> | undefined;
+            if (modelUsage) {
+              for (const [model, usage] of Object.entries(modelUsage)) {
+                const existing = runModelUsage[model] ?? { costUSD: 0, inputTokens: 0, outputTokens: 0 };
+                runModelUsage[model] = {
+                  costUSD:      existing.costUSD      + ((usage['costUSD']      as number | undefined) ?? 0),
+                  inputTokens:  existing.inputTokens  + ((usage['inputTokens']  as number | undefined) ?? 0),
+                  outputTokens: existing.outputTokens + ((usage['outputTokens'] as number | undefined) ?? 0),
+                };
+              }
+            }
+          }
+
           if (isAssistantMessage(msg)) {
             for (const block of msg.message.content) {
               if (block.type === 'text') coordinatorReport += block.text;
@@ -152,6 +172,18 @@ async function main(): Promise<void> {
 
       display.stop();
       display.showReport(coordinatorReport);
+
+      // Show cost summary
+      if (runCostUsd > 0) {
+        const modelBreakdown = Object.entries(runModelUsage)
+          .filter(([, u]) => u.costUSD > 0)
+          .sort(([, a], [, b]) => b.costUSD - a.costUSD)
+          .map(([model, u]) => `${model}: $${u.costUSD.toFixed(4)}`)
+          .join(' | ');
+        console.log(`\n  Run cost: $${runCostUsd.toFixed(4)}${modelBreakdown ? `  (${modelBreakdown})` : ''}`);
+        transcript.writeToFile(`\n[Run cost: $${runCostUsd.toFixed(4)}]\n`);
+      }
+
       transcript.writeToFile('\n[Run complete]\n');
 
       // ── Engagement score prompt (#11) ─────────────────────────────────────
