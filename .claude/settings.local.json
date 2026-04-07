@@ -1,13 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3 -c \"import sys, json; pkg = json.load\\(sys.stdin\\); print\\('main:', pkg.get\\('main'\\)\\); print\\('module:', pkg.get\\('module'\\)\\); print\\('exports:', json.dumps\\(pkg.get\\('exports', {}\\), indent=2\\)[:500]\\)\")",
-      "Bash(npx tsc:*)",
-      "Bash(npm install:*)",
-      "Bash(grep:*)",
-      "Bash(./node_modules/.bin/tsc:*)",
+      "Read(*)",
+      "Write(files/*)",
+      "Write(memory/*)",
+      "Glob(*)",
       "Bash(git add:*)",
-      "Bash(find /Users/danielkapper/Projects/research-agent/files -name *.json -not -path */node_modules/*)",
       "Bash(git commit:*)",
       "Bash(git push:*)"
     ]

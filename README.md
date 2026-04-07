@@ -1,68 +1,76 @@
 # Blog Production Agent
 
-A multi-agent system that researches a topic, writes a full blog post in your brand voice, and delivers a ready-to-publish package — social copy, email teaser, A/B headline variants, and more.
+A multi-agent blog production pipeline that researches a topic, writes a full post in your brand voice, and delivers a ready-to-publish package — social copy, email teaser, A/B headline variants, and more.
+
+> **No API key required.** This pipeline runs entirely within Claude Code on your Claude Max plan. No Node.js, no npm, no `.env` file needed.
 
 ## Quick Start
 
-```bash
-npm install
+1. [Install Claude Code](https://claude.ai/code)
+2. Clone this repo and open it in Claude Code:
+   ```bash
+   git clone https://github.com/dkapper01/blog-production-agent.git
+   cd blog-production-agent
+   claude
+   ```
+3. Edit the brand files in `memory/` to match your voice and brand (see [Brand & Voice](#brand--voice) below)
+4. Tell Claude Code what you want to write:
+   ```
+   Write a post about AI agents in enterprise software
+   ```
 
-# Add your API key
-echo "ANTHROPIC_API_KEY=your-key-here" > .env
+That's it. The pipeline runs automatically.
 
-# Run
-npm start
+## How to Run a Post
+
+Just describe what you want. Examples:
+
 ```
+Write a post about the future of remote work
+Write a post about second brain tools in Turkish
+Write a post about startup fundraising in both English and Turkish
+Write a post about Web3 for developers as a listicle [SKIP_ALT_FORMAT]
+Write a post about AI productivity tools [PAUSE_AFTER_OUTLINE]
+```
+
+### Intake parameters
+
+| Parameter | How to specify | Default |
+|-----------|---------------|---------|
+| **Topic** | Just state it | Required |
+| **Language** | "in English", "in Turkish", "in both English and Turkish" | English |
+| **Format** | "as an explainer / how-to / listicle / opinion / case study" | Agent decides |
+| **Tone** | "informative", "conversational", "bold", "practical" | Brand guide default |
+| **Audience** | "for [description]" | Brand guide default |
+| **Keywords** | "targeting [keyword1], [keyword2]" | Agent decides |
+| **Word count** | "short (~800–1200)", "standard (~1200–2000)", "long (~2000–2500)" | Standard |
+| **Pause for review** | `[PAUSE_AFTER_OUTLINE]` anywhere in request | Off |
+| **Skip alt format** | `[SKIP_ALT_FORMAT]` anywhere in request | Off |
 
 ## How It Works
 
-An interactive wizard collects your post parameters — topic, format, tone, language, audience, keywords, and word count. Then the pipeline runs automatically:
+Claude Code's main session acts as the **Coordinator** — it owns all routing, triage, and inter-agent communication. Specialist subagents handle focused tasks and write results to disk.
 
-1. **Coordinator** decomposes the topic into 3–5 research angles
+1. **Coordinator** decomposes the topic into 3–5 research angles and checks for prior coverage
 2. **Researchers** run in parallel, searching the web and saving structured findings to `files/research/`
-3. **Coordinator** reads all research files, detects conflicting statistics, and resolves them by confidence score before passing a clean fact set to the outline agent
+3. **Coordinator** reads all research, detects conflicting statistics, and resolves them by confidence score
 4. **Outline agent** reads all research and produces a section-by-section plan with SEO assignments
 5. **Writer** drafts the post in Markdown using the outline and research
-6. **Editor** + **SEO reviewer** + **Brand checker** run in parallel — editor scores the draft (0–100); posts below 85 are sent back for revision; brand violations block publishing
-7. **Publisher** produces all output files and updates the content library
-
-## Architecture
-
-The system uses a **hub-and-spoke architecture**. The coordinator is the hub: it owns all routing decisions, error handling, triage logic, and inter-agent communication. Subagents are the spokes: stateless executors that receive only the files relevant to their task and write results back to disk.
-
-Subagents do not inherit the coordinator's conversation history. Every subagent starts fresh with only its own system prompt plus whatever context the coordinator explicitly injects into its task prompt (brand guide, voice guide, prior coverage list, etc.). This isolation keeps each subagent focused and prevents context bleed between stages.
-
-The coordinator is responsible for:
-- **Decomposition** — breaking the topic into 3–5 subtopics narrow enough for one researcher each
-- **Delegation** — deciding which agents to spawn, in what order, and in parallel where possible
-- **Aggregation** — reading all subagent outputs from disk and synthesising them into the next stage's inputs
-- **Triage** — applying pass/revise/redraft thresholds and brand compliance rules before publishing
+6. **Editor** + **SEO agent** + **Brand checker** run in parallel — editor scores the draft (0–100); posts below 85 are revised; brand violations block publishing
+7. **Publisher** writes the final post, social copy, email teaser, and A/B variants; updates the content library
 
 ## Agents
 
-| Agent             | Model  | Tools                         | Purpose                                                             |
-| ----------------- | ------ | ----------------------------- | ------------------------------------------------------------------- |
-| **Coordinator**   | Sonnet | `Task`, `Read`, `Glob`        | Orchestrates the full pipeline; all routing and triage decisions    |
-| **Researcher**    | Haiku  | `WebSearch`, `WebFetch`, `Write` | Researches one subtopic, writes `files/research/{slug}.json`     |
-| **Outline**       | Sonnet | `Glob`, `Read`, `Write`       | Builds `files/drafts/outline.json` from all research                |
-| **Writer**        | Sonnet | `Glob`, `Read`, `Write`       | Writes the full draft and citation map                              |
-| **SEO**           | Haiku  | `Read`, `Write`               | Checks keyword density, headings, and readability                   |
-| **Editor**        | Sonnet | `Read`, `Write`               | Scores the draft (0–100); flags factual concerns; sees draft only   |
-| **Brand Checker** | Haiku  | `Read`, `Write`               | Validates hard constraints and topic blocklist against brand guide   |
-| **Publisher**     | Haiku  | `Glob`, `Read`, `Write`       | Writes output files; updates content library                        |
-
-## Wizard Options
-
-| Question       | Options                                                                               |
-| -------------- | ------------------------------------------------------------------------------------- |
-| **Format**     | Let agent decide / Explainer / How-to / Listicle / Opinion / Case study               |
-| **Language**   | English only / Turkish only / Both (dual independent posts)                           |
-| **Tone**       | Informative & analytical / Conversational / Bold & opinionated / Practical & tactical |
-| **Audience**   | Brand guide default or custom description                                             |
-| **Keywords**   | Agent decides or comma-separated list                                                 |
-| **Word count** | Short (~800–1,200) / Standard (~1,200–2,000) / Long (~2,000–2,500)                    |
-
-Your format, language, tone, and word count preferences are saved between sessions.
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **Coordinator** | Sonnet | Orchestrates the full pipeline; all routing and triage decisions |
+| **Researcher** | Haiku | Researches one subtopic, writes `files/research/{slug}.json` |
+| **Outline** | Sonnet | Builds the section-by-section plan from all research |
+| **Writer** | Sonnet | Writes the full draft, citation map, and metadata |
+| **Editor** | Sonnet | Scores the draft (0–100); flags factual concerns; sees draft only |
+| **SEO** | Haiku | Checks keyword density, headings, and readability |
+| **Brand Checker** | Haiku | Validates hard constraints and topic blocklist against brand guide |
+| **Publisher** | Haiku | Writes output files; updates content library and audience model |
 
 ## Output
 
@@ -75,37 +83,36 @@ files/output/
   2026-04-01-{slug}-email.json        ← email teaser (subject, preview, body, CTA)
   2026-04-01-{slug}-variants.json     ← A/B headline + meta description variants
   2026-04-01-{slug}-listicle.md       ← alternative format version
-  ...
 ```
 
 For dual-language runs, Turkish files get a `-tr` suffix.
 
 ## Brand & Voice
 
-Two files in `memory/` control how posts are written. Edit them to match your style — the agent reads them fresh at the start of every run.
+Four files in `memory/` control how posts are written. Edit them to match your style — the agent reads them fresh at the start of every run.
 
-- **`memory/brand-guide.json`** — voice description, tone words, target audience, hard constraints, topics to avoid, preferred word count
-- **`memory/gulcan-voice.md`** — detailed voice profile with examples, anti-patterns, and language guidance for both English and Turkish
+| File | What to edit |
+|------|-------------|
+| `memory/brand-guide.json` | Voice description, tone words, target audience, hard constraints, topics to avoid, preferred word count |
+| `memory/gulcan-voice.md` | Detailed voice profile with examples, anti-patterns, and language-specific guidance |
+| `memory/content-library.json` | Auto-updated after every published post — tracks all prior coverage |
+| `memory/audience-model.json` | Add `engagementScore` values manually after posts go live; the agent favours top-performing formats and keywords on future runs |
 
-High-scoring posts (≥85) automatically append an example paragraph to the voice guide.
+High-scoring posts (≥85) automatically append an example paragraph to the voice guide, so the agent's understanding of your voice improves over time.
 
-## Content Library & Audience Model
+## Language Support
 
-- **`memory/content-library.json`** — every published post, indexed by slug
-- **`memory/audience-model.json`** — per-post engagement signals; add `engagementScore` values manually after posts go live and the agent will favour top-performing formats and keywords on future runs
+| Mode | How to request |
+|------|---------------|
+| English only | Default — just state the topic |
+| Turkish only | Add "in Turkish" or write the request in Turkish |
+| Both languages | "in both English and Turkish" or "hem İngilizce hem Türkçe" |
 
-## Session Logs
-
-```
-logs/
-  session_YYYYMMDD_HHMMSS/
-    transcript.txt      ← human-readable session log
-    tool_calls.jsonl    ← structured record of every tool call
-```
+In dual-language mode, both posts are written natively — the Turkish version is not a translation. They share the same research but have independent outlines, drafts, and editorial passes.
 
 ## Requirements
 
-- Node.js 18+
-- `ANTHROPIC_API_KEY` in `.env`
+- [Claude Code](https://claude.ai/code) with a Claude Max plan
+- Git (to clone the repo)
 
-See [USER_GUIDE.md](USER_GUIDE.md) for detailed usage instructions.
+No Node.js. No API key. No `.env` file.
