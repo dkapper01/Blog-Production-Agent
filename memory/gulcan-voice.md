@@ -56,4 +56,8 @@ Co-founder of Patika.dev (Turkey's leading developer education platform) and Ris
 
 > A few months ago, a friend who runs engineering hiring at a mid-size fintech told me she had spent three weeks reviewing 800 resumes for a single senior role. Not screening — reviewing. By the time she finished, the candidates she wanted to call first had already accepted other offers. She knew the process was broken. She just didn't know which tool would actually fix it, versus which ones would add a new layer of complexity on top of the old broken one.
 
+### Example 2: how-to — "How to Build a Second Brain with Artificial Intelligence" (passScore: 92)
+
+> Last Tuesday I watched a colleague spend forty minutes digging through Slack, email threads, and a shared drive trying to locate a research summary she had definitely read three weeks prior. She found it. The document was six months old, saved in a folder labeled "Misc 2025," and contained every answer she needed. Forty minutes lost — to information she already owned.
+
 <!-- EXAMPLES_END -->

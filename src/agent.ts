@@ -115,46 +115,24 @@ async function main(): Promise<void> {
       transcript.writeToFile(`\n[Intake answers]\n${prompt}\n`);
 
       let coordinatorReport = '';
-      const runStart = Date.now();
-
-      // Accumulated across all turns (multi-turn runs possible with outline review)
-      let totalCostUsd = 0;
-      const modelUsageAcc: Record<string, ModelMetrics> = {};
-      let totalInputTokens    = 0;
-      let totalOutputTokens   = 0;
-      let totalCacheReadTokens  = 0;
-      let totalCacheWriteTokens = 0;
+      let runCostUsd = 0;
+      let runModelUsage: Record<string, { costUSD: number; inputTokens: number; outputTokens: number }> = {};
 
       const runTurn = async (p: string): Promise<void> => {
         await llm.send(p, baseOptions, (msg) => {
           const m = msg as Record<string, unknown>;
 
-          // Capture all usage fields from the SDK result message
+          // Capture final cost from the SDK result message
           if (m['type'] === 'result') {
-            totalCostUsd += (m['total_cost_usd'] as number | undefined) ?? 0;
-
-            const usage = m['usage'] as Record<string, unknown> | undefined;
-            if (usage) {
-              totalInputTokens      += (usage['input_tokens']                  as number | undefined) ?? 0;
-              totalOutputTokens     += (usage['output_tokens']                 as number | undefined) ?? 0;
-              totalCacheReadTokens  += (usage['cache_read_input_tokens']       as number | undefined) ?? 0;
-              totalCacheWriteTokens += (usage['cache_creation_input_tokens']   as number | undefined) ?? 0;
-            }
-
-            const sdkModelUsage = m['modelUsage'] as Record<string, Record<string, unknown>> | undefined;
-            if (sdkModelUsage) {
-              for (const [model, mu] of Object.entries(sdkModelUsage)) {
-                const existing = modelUsageAcc[model] ?? {
-                  costUSD: 0, inputTokens: 0, outputTokens: 0,
-                  cacheReadInputTokens: 0, cacheCreationInputTokens: 0, webSearchRequests: 0,
-                };
-                modelUsageAcc[model] = {
-                  costUSD:                  existing.costUSD                  + ((mu['costUSD']                  as number | undefined) ?? 0),
-                  inputTokens:              existing.inputTokens              + ((mu['inputTokens']              as number | undefined) ?? 0),
-                  outputTokens:             existing.outputTokens             + ((mu['outputTokens']             as number | undefined) ?? 0),
-                  cacheReadInputTokens:     existing.cacheReadInputTokens     + ((mu['cacheReadInputTokens']     as number | undefined) ?? 0),
-                  cacheCreationInputTokens: existing.cacheCreationInputTokens + ((mu['cacheCreationInputTokens'] as number | undefined) ?? 0),
-                  webSearchRequests:        existing.webSearchRequests        + ((mu['webSearchRequests']        as number | undefined) ?? 0),
+            runCostUsd += (m['total_cost_usd'] as number | undefined) ?? 0;
+            const modelUsage = m['modelUsage'] as Record<string, Record<string, unknown>> | undefined;
+            if (modelUsage) {
+              for (const [model, usage] of Object.entries(modelUsage)) {
+                const existing = runModelUsage[model] ?? { costUSD: 0, inputTokens: 0, outputTokens: 0 };
+                runModelUsage[model] = {
+                  costUSD:      existing.costUSD      + ((usage['costUSD']      as number | undefined) ?? 0),
+                  inputTokens:  existing.inputTokens  + ((usage['inputTokens']  as number | undefined) ?? 0),
+                  outputTokens: existing.outputTokens + ((usage['outputTokens'] as number | undefined) ?? 0),
                 };
               }
             }
@@ -203,38 +181,17 @@ async function main(): Promise<void> {
       display.stop();
       display.showReport(coordinatorReport);
 
-      // Build and display full run metrics
-      const agentSummary = tracker.getSummary();
-      const { wordCount, citationCount } = readDraftMeta(answers.language);
-      const metrics: RunMetrics = {
-        topic:    answers.topic,
-        format:   answers.format === 'agent-decide' ? 'auto' : answers.format,
-        language: answers.language,
-        completedAt: new Date().toISOString(),
+      // Show cost summary
+      if (runCostUsd > 0) {
+        const modelBreakdown = Object.entries(runModelUsage)
+          .filter(([, u]) => u.costUSD > 0)
+          .sort(([, a], [, b]) => b.costUSD - a.costUSD)
+          .map(([model, u]) => `${model}: $${u.costUSD.toFixed(4)}`)
+          .join(' | ');
+        console.log(`\n  Run cost: $${runCostUsd.toFixed(4)}${modelBreakdown ? `  (${modelBreakdown})` : ''}`);
+        transcript.writeToFile(`\n[Run cost: $${runCostUsd.toFixed(4)}]\n`);
+      }
 
-        totalCostUsd,
-        modelUsage: modelUsageAcc,
-
-        totalInputTokens,
-        totalOutputTokens,
-        totalCacheReadTokens,
-        totalCacheWriteTokens,
-
-        durationMs:        Date.now() - runStart,
-        subagentsSpawned:  agentSummary.subagentsSpawned,
-        totalToolCalls:    agentSummary.totalToolCalls,
-        webSearchCount:    agentSummary.webSearchCount,
-        revisionPasses:    agentSummary.revisionPasses,
-        agentBreakdown:    agentSummary.agentBreakdown,
-
-        passScore:     readPassScore(answers.language),
-        wordCount,
-        citationCount,
-      };
-
-      showRunMetrics(metrics);
-      saveRunMetrics(metrics, sessionDir);
-      transcript.writeToFile(`\n[Run cost: $${totalCostUsd.toFixed(4)}]\n`);
       transcript.writeToFile('\n[Run complete]\n');
 
       // ── Engagement score prompt (#11) ─────────────────────────────────────
