@@ -6,7 +6,8 @@
       "Bash(npm install:*)",
       "Bash(grep:*)",
       "Bash(./node_modules/.bin/tsc:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(find /Users/danielkapper/Projects/research-agent/files -name *.json -not -path */node_modules/*)"
     ]
   }
 }

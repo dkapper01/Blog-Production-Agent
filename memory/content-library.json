@@ -88,5 +88,18 @@
     "language": "tr",
     "wordCount": 1080,
     "citationCount": 20
+  },
+  {
+    "id": "c7d8e9f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+    "title": "How to Build a Second Brain with Artificial Intelligence: A Step-by-Step System for 2026",
+    "slug": "how-to-build-a-second-brain-with-artificial-intelligence",
+    "summary": "Knowledge workers lose 2.5 hours every day hunting for information they already encountered once. This guide walks through four practical steps — choosing a platform, setting up AI-powered capture, organizing with PARA, and activating semantic retrieval — plus the 90-day habit framework needed to keep the system compounding.",
+    "keywords": ["Artificial intelligence", "second brain", "personal knowledge management", "PARA method", "AI note-taking", "knowledge management system", "information overload"],
+    "publishedAt": "2026-04-06T14:30:00.000Z",
+    "outputFile": "files/output/2026-04-06-how-to-build-a-second-brain-with-artificial-intelligence.md",
+    "format": "how-to",
+    "language": "en",
+    "wordCount": 1055,
+    "citationCount": 23
   }
 ]
