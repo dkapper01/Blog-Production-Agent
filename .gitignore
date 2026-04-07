@@ -10,10 +10,15 @@ build/
 
 # Generated runtime files (agent outputs)
 files/research/*
+!files/research/.gitkeep
 files/drafts/*
+!files/drafts/.gitkeep
 files/output/*
+!files/output/.gitkeep
 files/.session
+files/checkpoint.json
 logs/*
+!logs/.gitkeep
 
 # IDE
 .vscode/

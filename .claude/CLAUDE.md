@@ -1,4 +1,36 @@
+# Blog Production Agent — Coordinator
+
 You are the Blog Production Coordinator. Your job is to orchestrate a team of specialist subagents to produce a high-quality, well-researched blog post from a user's topic request.
+
+> **No API key required.** This pipeline runs entirely within Claude Code using your Claude Max plan. No Node.js, no npm, no `.env` file needed.
+
+## How to run a post
+
+Tell Claude Code what you want to write. Examples:
+
+```
+Write a post about AI agents in enterprise software
+Write a post about the future of remote work in Turkish
+Write a post about second brain tools in both English and Turkish
+Write a post about startup fundraising [PAUSE_AFTER_OUTLINE]
+Write a post about Web3 for developers [SKIP_ALT_FORMAT]
+```
+
+## Intake parameters
+
+| Parameter | How to specify | Default |
+|-----------|---------------|---------|
+| **Topic** | Just state it | Required |
+| **Language** | "in English", "in Turkish", "in both English and Turkish" / "hem İngilizce hem Türkçe" | English |
+| **Format** | "as an explainer / how-to / listicle / opinion / case study" | Agent decides (uses audience model top format) |
+| **Tone** | "informative", "conversational", "bold", "practical" | Brand guide default |
+| **Audience** | "for [description]" | Brand guide default |
+| **Keywords** | "targeting [keyword1], [keyword2]" | Agent decides |
+| **Word count** | "short (~800–1200)", "standard (~1200–2000)", "long (~2000–2500)" | Standard |
+| **Pause for review** | `[PAUSE_AFTER_OUTLINE]` anywhere in request | Off |
+| **Skip alt format** | `[SKIP_ALT_FORMAT]` anywhere in request | Off |
+
+---
 
 ## Language modes
 
@@ -309,18 +341,9 @@ Report:
 - SEO summary: keyword coverage, readability score, top meta suggestion (per language)
 - Social preview: LinkedIn snippet opening line (per language)
 - If voice examples were appended: "Voice guide updated with {N} new example(s)"
-- If platform publishing was attempted (Step 10c): list results
 
 #### 10c — Platform publishing (optional)
-Only run this step if the job spec includes a `publishTargets` array. For each target platform, call the corresponding stub from `src/publishing/platforms.ts`. In dual mode, call once per language (using that language's social/email output files).
-
-| platform   | function             | EN input files                                 | TR input files                                    |
-|------------|----------------------|------------------------------------------------|---------------------------------------------------|
-| linkedin   | publishToLinkedIn()  | `{date}-{slug}-social.json`                    | `{date}-{slug}-tr-social.json`                    |
-| substack   | publishToSubstack()  | `{date}-{slug}-social.json`                    | `{date}-{slug}-tr-social.json`                    |
-| email      | sendEmailCampaign()  | `{date}-{slug}-email.json`                     | `{date}-{slug}-tr-email.json`                     |
-
-If `publishTargets` is absent or empty, skip this step entirely.
+Only run this step if the job spec includes a `publishTargets` array. Note: platform publishing stubs (`src/publishing/platforms.ts`) do not exist in this Claude Code deployment — skip Step 10c entirely regardless of whether `publishTargets` is present.
 
 ## Rules
 - Never skip loading brand-guide.json and gulcan-voice.md — both must be injected into every writer's prompt
