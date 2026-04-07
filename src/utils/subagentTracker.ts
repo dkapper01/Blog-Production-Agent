@@ -345,6 +345,47 @@ export class SubagentTracker {
     return { continue: true };
   };
 
+  /**
+   * Return a summary of everything tracked during this run.
+   * Called after llm.send() completes to populate RunMetrics.
+   */
+  getSummary(): {
+    subagentsSpawned: number;
+    totalToolCalls: number;
+    webSearchCount: number;
+    revisionPasses: number;
+    agentBreakdown: Array<{ agentId: string; agentType: string; toolCallCount: number; durationMs: number | null }>;
+  } {
+    const agentBreakdown = [...this.sessions.values()].map((session) => {
+      const startTime = this.taskStartTimes.get(session.parentToolUseId);
+      return {
+        agentId:       session.subagentId,
+        agentType:     session.subagentType,
+        toolCallCount: session.toolCalls.length,
+        durationMs:    startTime != null ? Date.now() - startTime : null,
+      };
+    });
+
+    const totalToolCalls = agentBreakdown.reduce((s, a) => s + a.toolCallCount, 0);
+
+    const webSearchCount = [...this.sessions.values()].reduce(
+      (s, session) => s + session.toolCalls.filter((tc) => tc.toolName === 'WebSearch').length,
+      0,
+    );
+
+    // Count writer spawns beyond the first as revision passes
+    const writerSpawns = [...this.sessions.values()].filter((s) => s.subagentType === 'writer').length;
+    const revisionPasses = Math.max(0, writerSpawns - 1);
+
+    return {
+      subagentsSpawned: this.sessions.size,
+      totalToolCalls,
+      webSearchCount,
+      revisionPasses,
+      agentBreakdown,
+    };
+  }
+
   close(): void {
     if (this.toolLogFile) {
       this.toolLogFile.end();

@@ -18,6 +18,14 @@ import {
 import { isAssistantMessage, processAssistantMessage } from './utils/messageHandler';
 import { ProgressDisplay } from './utils/progressDisplay';
 import { runWizard, buildPromptString } from './intake/wizard';
+import {
+  type RunMetrics,
+  type ModelMetrics,
+  showRunMetrics,
+  saveRunMetrics,
+  readPassScore,
+  readDraftMeta,
+} from './utils/metricsDisplay';
 import { loadStageTiming } from './utils/logParser';
 import { loadAudienceModel, saveAudienceModel, deriveInsights } from './memory/audienceModel';
 import type { SubagentTracker } from './utils/subagentTracker';
