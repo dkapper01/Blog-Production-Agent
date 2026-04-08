@@ -101,5 +101,32 @@
     "language": "en",
     "wordCount": 1055,
     "citationCount": 23
+  },
+  {
+    "id": "e3f4a5b6-7c8d-9e0f-1a2b-3c4d5e6f7a8b",
+    "title": "The Skills You Actually Need to Become a Forward Deployed Engineer",
+    "slug": "forward-deployed-engineer-skills",
+    "summary": "A comprehensive explainer on what it takes to become a Forward Deployed Engineer — covering the role's definition, technical depth requirements (full-stack, systems integration, deployment environments), communication as a first-class skill, ambiguity tolerance, and a practical career path guide including Palantir's Deployment Exercise and compensation benchmarks.",
+    "keywords": ["forward deployed engineer", "FDE skills", "how to become a forward deployed engineer", "Palantir forward deployed engineer", "field engineer career"],
+    "publishedAt": "2026-04-07T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-07-forward-deployed-engineer-skills.md",
+    "topic": "Skill set required for becoming a forward deployed engineer",
+    "format": "explainer",
+    "language": "en",
+    "wordCount": 2212,
+    "passScore": 81
+  },
+  {
+    "id": "f4a5b6c7-8d9e-0f1a-2b3c-4d5e6f7a8b9c",
+    "title": "7 Skills That Separate a Great Forward Deployed Engineer from a Great Software Engineer",
+    "slug": "forward-deployed-engineer-skills-listicle",
+    "summary": "A listicle breaking down the 7 skills that distinguish effective FDEs from technically strong product engineers: systems integration, rapid prototyping, executive communication, adoption management, ambiguity tolerance, influence without authority, and the operator mindset.",
+    "keywords": ["forward deployed engineer", "FDE skills", "Palantir forward deployed engineer", "FDE vs software engineer", "field engineer career"],
+    "publishedAt": "2026-04-07T00:00:00.000Z",
+    "outputFile": "files/output/2026-04-07-forward-deployed-engineer-skills-listicle.md",
+    "topic": "Skill set required for becoming a forward deployed engineer",
+    "format": "listicle",
+    "language": "en",
+    "wordCount": 1050
   }
 ]
