@@ -1,0 +1,61 @@
+{
+  "companyName": "Patika.dev",
+  "websiteUrl": "https://www.patika.dev",
+  "businessDescription": "Turkey's largest talent development platform — free bootcamps, corporate training, and AI literacy programs connecting 260,000+ learners with 500+ partner companies.",
+  "voice": "Accessible and motivational — explains complex technical topics clearly, meets learners where they are, and frames every post around practical career or business outcomes.",
+  "tone": ["informative", "encouraging", "practical", "accessible", "solution-oriented"],
+  "targetAudience": "Two audiences: (1) career-changers and junior developers in Turkey seeking practical tech skills and employment; (2) HR and L&D leaders at Turkish enterprises navigating workforce transformation and AI adoption.",
+  "hardConstraints": [
+    {
+      "rule": "Always cite sources inline with hyperlinks.",
+      "example": "According to [LinkedIn's 2025 Workforce Report](https://...)..."
+    },
+    {
+      "rule": "Never make up statistics — only use numbers that appear in the research notes.",
+      "example": "If no stat is found, write 'data unavailable' rather than estimating."
+    },
+    {
+      "rule": "Every post must have a clear thesis stated in the introduction.",
+      "example": "First paragraph ends with a claim the post will defend or explore."
+    },
+    {
+      "rule": "Never talk down to the reader — assume they are smart but new to the topic.",
+      "example": "Explain jargon when first introduced. Don't skip steps in how-to content."
+    }
+  ],
+  "softPreferences": [
+    {
+      "preference": "Ground abstract concepts in real career or business outcomes.",
+      "example": "Don't just explain what React is — explain what kind of jobs it opens up."
+    },
+    {
+      "preference": "Use Turkish examples and context where relevant.",
+      "example": "Reference Turkish companies, the Istanbul tech ecosystem, and local job market data when available."
+    },
+    {
+      "preference": "Keep paragraphs under 5 sentences — this audience reads on mobile.",
+      "example": "Break up long explanations into scannable chunks."
+    },
+    {
+      "preference": "Conclude with a concrete next step the reader can take today.",
+      "example": "End with: 'If you want to start, here is the first thing to do...'"
+    }
+  ],
+  "avoidTopics": [
+    "partisan political commentary",
+    "investment advice",
+    "medical diagnoses",
+    "content that discourages career changers or implies tech is only for certain people"
+  ],
+  "preferredWordCount": {
+    "min": 1000,
+    "max": 2000
+  },
+  "primaryLanguage": "tr",
+  "secondaryLanguage": "en",
+  "seoContext": {
+    "primaryMarket": "Turkey",
+    "keyTopicAreas": ["tech career guidance", "software development education", "AI literacy", "workforce upskilling", "coding bootcamps"],
+    "competitorTypes": ["online learning platforms", "university CS programs", "corporate training providers"]
+  }
+}

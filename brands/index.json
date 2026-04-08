@@ -1,0 +1,24 @@
+{
+  "brands": [
+    {
+      "slug": "startup-one",
+      "name": "Patika.dev",
+      "description": "Turkey's largest tech talent development platform — bootcamps, corporate training, AI literacy"
+    },
+    {
+      "slug": "startup-two",
+      "name": "Rise In",
+      "description": "Global web3 education platform — free bootcamps and builder challenges for 480,000+ developers"
+    },
+    {
+      "slug": "startup-three",
+      "name": "JobNest.ai",
+      "description": "All-in-one AI platform for workforce assessment and upskilling — measure real potential, then act on it"
+    },
+    {
+      "slug": "startup-four",
+      "name": "TalkParty",
+      "description": "AI-powered corporate English training — 24/7 speaking practice, HR analytics, 80% cheaper than traditional methods"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+---
+name: jobnest-voice
+description: "Voice profile for JobNest.ai blog content. Use this skill whenever writing blog posts or thought leadership content for the JobNest.ai brand. Content is in English targeting HR leaders, L&D professionals, and CHROs at growth-stage and enterprise companies."
+---
+
+# JobNest.ai — Voice Profile
+
+JobNest.ai exists because most companies are making people decisions — who to hire, who to develop, who to promote — without actually understanding their people. The brand voice comes from that conviction: direct, evidence-driven, and always pointing from insight to action. JobNest content doesn't traffic in HR buzzwords or feel-good frameworks. It makes an argument and backs it up.
+
+---
+
+## Core Voice DNA
+
+### 1. Start with the problem, not the trend
+
+JobNest posts don't open with "skills-based hiring is having a moment." They open with the specific, expensive pain that makes skills-based hiring necessary — a bad hire, a team that can't adapt, a promotion that didn't land. Make the reader feel the problem before offering the frame.
+
+**Patterns that work:**
+- "The average bad hire costs a company 30% of that employee's annual salary. Most companies already know this. What they don't know is why it keeps happening."
+- "Your L&D team ran 12 training programs last year. Do you know which ones changed how people actually work?"
+- "You can't grow what you don't measure. And you can't measure what you never understood."
+
+### 2. The measurement-action loop is the core idea
+
+JobNest's founding insight is that measurement without action is just data collection, and action without measurement is guesswork. This tension shows up in good content: the post identifies what's being measured poorly (or not at all), explains why that matters, and lands on what to do about it.
+
+Use this as a structural test: does the post move the reader from "I didn't know this was a problem" → "I understand why it's a problem" → "here's what I can do"?
+
+### 3. Confident, not arrogant — direct, not harsh
+
+JobNest takes clear positions. It doesn't hedge everything with "it depends" or bury arguments in qualifications. But confidence isn't the same as dismissiveness. When the research is genuinely mixed, say so. When a common HR practice has merit alongside its flaws, acknowledge both.
+
+**Do:** "Most performance reviews measure the wrong things. Here's the evidence, and here's a better framework."
+
+**Don't:** "Most HR leaders have no idea what they're doing with performance data." (punches down)
+
+### 4. B2B but human
+
+The reader is an HR leader or CHRO — they have real pressure, real budgets, and real accountability. Write for a person making a decision, not a corporate persona. Use "your team", "your hiring process", "your people" — not "organizations" and "stakeholders."
+
+---
+
+## Structural Habits
+
+- **Introduction:** 2–3 short paragraphs. Opens with a specific business pain or a surprising data point. States the post's argument clearly by the end of the intro — no mystery about where it's going.
+- **Body:** Each section answers one question or makes one move in the argument. Use H2s that would make sense read in isolation. Data and examples belong in the body, not the intro.
+- **Conclusion:** Lands on a concrete decision or action. "If you take one thing from this..." or "The first question to ask your team..." Not a summary — a directive.
+- **Lists:** Use sparingly and only when genuinely enumerable. Three to five items max. Never use a list to avoid making an argument.
+
+---
+
+## Language to Use
+
+- measure, assess, match, develop, evaluate, calibrate
+- real potential, true fit, skills gap, performance signal
+- bite-sized, continuous, integrated, single platform
+- growth-stage, enterprise, people strategy, talent pipeline
+- "you can't grow what you don't measure"
+
+## Anti-Patterns — Never Write Like This
+
+- No HR buzzword soup: "holistic talent ecosystems", "synergistic workforce alignment", "human capital optimization"
+- No opening with "In today's rapidly evolving talent landscape..."
+- No framing employees as liabilities or costs to be managed
+- No surveillance language: assessment is about understanding and development, not monitoring
+- No passive voice: "assessments were conducted" → "we ran assessments"
+- Never end without a concrete action, decision, or next question for the reader
+- No false balance: if the evidence is clear, state it clearly
+
+---
+
+## Writing Rules (Non-Negotiable)
+
+- Open with a specific business pain, a data point, or a principle — never a trend observation or rhetorical question
+- Paragraphs must be under 5 sentences
+- Active voice throughout
+- End every post with a specific action, decision framework, or diagnostic question
+- Every factual claim must be cited with a [SOURCE: ...] placeholder
+- The measurement-action loop should be traceable through every post — problem → understanding → action
+
+---
+
+<!-- EXAMPLES_START -->
+<!-- High-scoring paragraphs from published posts will be added here automatically. -->
+<!-- EXAMPLES_END -->

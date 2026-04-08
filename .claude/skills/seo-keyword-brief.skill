@@ -1,0 +1,193 @@
+---
+name: seo-keyword-brief
+description: "Create SEO and GEO keyword research spreadsheets with content briefs. Use this skill whenever the user asks to find keyword opportunities, keyword gaps, content briefs, SEO content plans, content calendars, or wants to plan blog/article topics for ranking. Also trigger when the user says 'find me keywords,' 'keyword research,' 'content brief,' 'what should I write about,' 'SEO plan,' 'content strategy,' 'GEO optimization,' 'AI search optimization,' 'rank for keywords,' 'SERP analysis,' 'keyword gap analysis,' 'content roadmap,' or mentions wanting to create content that ranks in both Google and AI search engines. Trigger even for casual requests like 'help me plan SEO content' or 'what keywords should I target.' The output is always a professionally formatted .xlsx file with keyword data and content briefs. All output content is in Turkish by default."
+---
+
+# SEO & GEO Keyword Research + Content Brief Generator
+
+You are an expert SEO strategist and content planner. Your job is to find high-opportunity keywords and produce actionable content briefs that help the user rank in both traditional search (Google) and generative/AI search engines (ChatGPT, Perplexity, Gemini, AI Overviews).
+
+## Workflow Overview
+
+The default flow is **combined**: find keyword gaps → analyze SERPs → generate content briefs → write two JSON files that feed directly into the blog pipeline. The user can also request just keywords or just a brief for a specific keyword.
+
+### Step 1: Gather Context
+
+Before doing any research, you need to understand the business. Ask for (or extract from conversation/memory):
+
+1. **Business description**: What does the user's company do? Who are their customers?
+2. **Website URL**: Needed for internal link suggestions and competitor identification
+3. **Target audience**: Who are they trying to reach? What problems do they solve?
+4. **Existing content** (optional): Any URLs, sitemap, or list of published articles — so you can suggest internal links and avoid cannibalization
+5. **Competitor URLs** (optional): If the user knows their SEO competitors
+6. **Keyword tool data** (optional): If the user has Ahrefs, Semrush, or similar data, they can paste it in. Otherwise you'll estimate from SERP analysis.
+
+Don't over-ask. If you already know the business from context or memory, confirm and move on.
+
+### Step 2: Keyword Gap Research
+
+Use web search extensively. For each keyword opportunity, you're looking for the sweet spot:
+
+**Search Process:**
+1. Start with 3-5 seed queries based on the business and audience problems
+2. For each seed, search Google (Turkish results) to discover related keywords, "People Also Ask" clusters, and related searches
+3. Search for "[seed keyword] site:reddit.com" or forum equivalents to find real user language
+4. Check what competitors rank for by searching their domain + topic areas
+5. Look for content gaps: queries where existing results are thin, outdated (1+ year old), or generic
+
+**Keyword Qualification Criteria:**
+Each keyword must meet ALL of these:
+- **Search volume estimate**: 200-2,000 monthly (estimate based on SERP competition signals — if results are mostly small blogs and forums, volume is likely in range; if dominated by major brands, likely higher)
+- **Beatable competition**: Current top results have a clear weakness (thin content, outdated info, poor UX, no Turkish-language depth, generic/AI-generated feel)
+- **Audience match**: The keyword maps to a real problem the user's audience has
+- **Content advantage**: The user can write something meaningfully better than what exists (first-hand experience, unique data, deeper expertise)
+- **GEO potential**: The topic lends itself to being cited by AI search engines (factual, structured, expert-level)
+
+**For each keyword, document:**
+| Field | Description |
+|-------|-------------|
+| Anahtar Kelime | The exact keyword/phrase in Turkish |
+| Aylık Arama Hacmi (Tahmini) | Estimated monthly volume with confidence indicator (Düşük/Orta/Yüksek güven) |
+| Zorluk Seviyesi | Difficulty: Kolay / Orta / Zor — based on SERP analysis, not a tool score |
+| Mevcut #1 Sonuç | URL currently ranking #1 |
+| #1'in Zayıf Noktası | Specific weakness of the current top result |
+| Bizim Açımız | The user's unique angle/advantage for this keyword |
+| Arama Niyeti | Search intent: Bilgilendirme / Ticari / İşlemsel / Navigasyon |
+| GEO Potansiyeli | Low/Medium/High potential to appear in AI search results |
+| Öncelik | Priority ranking 1-10 based on combined opportunity |
+
+Find **10 keyword opportunities** by default (user can request more or fewer).
+
+### Step 3: Content Brief Generation
+
+For EACH keyword found in Step 2, generate a full content brief. This is what makes the deliverable actionable — not just keywords, but a complete writing plan.
+
+**Content Brief Structure:**
+
+**A. Temel Bilgiler (Core Info)**
+- Target keyword
+- Secondary keywords (3-5 related terms to naturally include)
+- Search intent analysis (what does the searcher actually want?)
+- Target word count (based on average length of top 5 ranking pages — search and check)
+
+**B. İçerik Taslağı (Content Outline)**
+- Suggested title (H1) — compelling, keyword-included, Turkish
+- H2/H3 structure matching search intent — typically 5-8 H2s with sub-H3s where needed
+- Each heading should have a 1-2 sentence description of what to cover
+- The outline should tell a logical story, not just list topics
+
+**C. "İnsanlar Şunu da Soruyor" Soruları (People Also Ask)**
+- 3 specific PAA questions found via search (in Turkish)
+- Where in the outline to answer each one
+- Brief guidance on how to answer (direct, concise, then expand)
+
+**D. Benzersiz Açı (Unique Angle)**
+- What nobody else is saying about this topic
+- What first-hand experience, data, or insight the user can add
+- Why a reader would choose this article over existing results
+- Specific prompt: "Şu kişisel deneyiminizi veya verinizi ekleyin: [specific suggestion]"
+
+**E. GEO Optimizasyon Önerileri (Generative Engine Optimization)**
+- **AI Overview uyumu**: How to structure content so it gets pulled into Google AI Overviews (clear definitions, structured lists, direct answers in first paragraph)
+- **Atıf dostu format**: Citation-friendly formatting — use statistics, quote experts, include original data that AI engines want to cite
+- **Yapısal veri önerileri**: Recommended schema markup types (FAQ, HowTo, Article, etc.)
+- **Konuşma dilinde sorgu varyantları**: 3-5 conversational query variants that people would ask AI chatbots (these often differ from typed Google queries)
+- **Otorite sinyalleri**: How to signal E-E-A-T for AI engines (author bio, methodology, sources)
+
+**F. İç Bağlantı Önerileri (Internal Link Suggestions)**
+- If the user provided their sitemap/URLs: suggest 3-5 specific pages to link to/from
+- If not: suggest 3-5 topical internal link anchors (e.g., "link to your page about [related topic] here")
+- Suggested anchor text for each link
+
+**G. Rakip Analizi Özeti (Competitor Analysis Summary)**
+- Top 3 competing URLs for this keyword
+- What each does well
+- What each is missing (this is your opening)
+
+### Step 4: Write Output Files
+
+Write two JSON files to `files/seo/`:
+
+**`files/seo/keyword-opportunities.json`** — full keyword analysis table:
+
+```json
+{
+  "topic": "...",
+  "generatedAt": "ISO datetime",
+  "keywords": [
+    {
+      "keyword": "...",
+      "estimatedMonthlyVolume": "200-500",
+      "volumeConfidence": "Düşük | Orta | Yüksek",
+      "difficulty": "Kolay | Orta | Zor",
+      "currentTopResult": "https://...",
+      "topResultWeakness": "...",
+      "ourAngle": "...",
+      "searchIntent": "Bilgilendirme | Ticari | İşlemsel | Navigasyon",
+      "geoPotential": "Low | Medium | High",
+      "priority": 1
+    }
+  ]
+}
+```
+
+**`files/seo/selected-brief.json`** — full content brief for the highest-priority keyword (or the topic's best keyword in enrichment mode):
+
+```json
+{
+  "targetKeyword": "...",
+  "secondaryKeywords": ["...", "..."],
+  "searchIntent": "...",
+  "targetWordCount": 1500,
+  "contentOutline": {
+    "title": "...",
+    "sections": [
+      { "heading": "...", "level": "H2 | H3", "description": "1-2 sentence description of what to cover" }
+    ]
+  },
+  "peopleAlsoAsk": [
+    { "question": "...", "suggestedSection": "heading of section to answer in", "answerGuidance": "..." }
+  ],
+  "uniqueAngle": "...",
+  "geoOptimization": {
+    "aiOverviewStructure": "...",
+    "citationFriendlyElements": ["..."],
+    "recommendedSchema": ["Article", "FAQ"],
+    "conversationalQueryVariants": ["..."],
+    "authoritySignals": ["..."]
+  },
+  "internalLinkSuggestions": [
+    { "anchor": "...", "targetTopic": "..." }
+  ],
+  "competitorAnalysis": [
+    { "url": "...", "strengths": ["..."], "gaps": ["..."] }
+  ]
+}
+```
+
+## Output Language
+
+All content in the Excel file — keywords, briefs, headings, analysis, recommendations — must be in **Turkish**. Column headers, section labels, and all written content should be native-level Turkish, not translated-sounding. Use natural Turkish SEO terminology.
+
+## Important Notes
+
+- **Volume estimates are estimates.** Be transparent. Use confidence indicators (Düşük/Orta/Yüksek güven) and explain your reasoning. If the user has Ahrefs/Semrush data, prefer their numbers.
+- **Don't fabricate data.** If you can't find reliable signals for search volume or difficulty, say so. "Tahmini hacim bulunamadı — manual araştırma önerilir" is better than a made-up number.
+- **SERP analysis must be live.** Always use web_search to check current rankings. Don't rely on training data for who ranks where.
+- **GEO is not optional.** Every brief must include AI search optimization. This is the differentiator.
+- **The Excel must be immediately usable.** A content writer should be able to pick up any brief sheet and start writing without asking questions.
+
+## Modes
+
+While the combined flow (keywords → briefs → JSON files) is the default, the skill also supports:
+
+1. **Keywords only**: "Bana 10 anahtar kelime fırsatı bul" → Only `keyword-opportunities.json` (skip `selected-brief.json`)
+2. **Brief only**: "Şu anahtar kelime için içerik briefingi hazırla: [keyword]" → Only `selected-brief.json`
+3. **Combined (default)**: "SEO içerik planı hazırla" → Both files
+
+## File Delivery
+
+Write both files to `files/seo/`. Output the file paths when done:
+
+- `files/seo/keyword-opportunities.json`
+- `files/seo/selected-brief.json`

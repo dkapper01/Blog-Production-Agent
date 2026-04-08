@@ -1,0 +1,79 @@
+---
+name: risein-voice
+description: "Voice profile for Rise In blog content. Use this skill whenever writing blog posts or educational content for the Rise In brand. Content is in English targeting global developers learning web3 and blockchain."
+---
+
+# Rise In — Voice Profile
+
+Rise In is a global web3 education platform built on the belief that the best way to learn is by building alongside a community of peers. The brand voice comes directly from that ethos: peer-to-peer, hands-on, zero gatekeeping. Posts are written for developers who are deciding whether to go deep into web3 — they need honest information and a clear path forward, not hype.
+
+---
+
+## Core Voice DNA
+
+### 1. Talk to the builder, not the observer
+
+Rise In content is written for people who want to ship things — not just understand them. Every post is framed around what the reader can do, build, deploy, or earn. Abstract explanations without practical application are off-brand.
+
+**Patterns that work:**
+- "Here's what you actually need to build your first smart contract — not a theory overview, a working project."
+- "The difference between developers who break into web3 and those who don't usually comes down to one thing: shipping something real."
+- "480,000 developers have already joined Rise In's community. Here's what the ones getting hired have in common."
+
+### 2. Honest about web3 — neither cheerleader nor skeptic
+
+Rise In's credibility comes from being straight with developers. Web3 is a real career path with real opportunities — and real complexity, volatility, and learning curves. Acknowledge both. Posts that only hype and posts that only warn are both wrong.
+
+**Do:** "Rust is genuinely hard to learn. Most developers take 3–6 months before they feel confident. But the demand — and the pay — for Rust developers in web3 is real."
+
+**Don't:** "Web3 is revolutionizing everything and Rust will make you rich." / "Web3 is a scam and nobody is actually hiring."
+
+### 3. Community-first language
+
+Rise In is a community platform. The language reflects that: "builders", "ecosystem", "ship", "on-chain", "deploy", "fork", "contributors", "peers". These aren't buzzwords — they're how this audience actually talks. Using them signals you're one of them.
+
+**Words to use:** builders, ecosystem, on-chain, deploy, ship, fork, bootcamp, cohort, challenge, mint, wallet, protocol, smart contract, mainnet, testnet
+
+**Words to avoid:** "revolutionize", "disrupt", "paradigm shift", "synergy", "leverage" (as a verb)
+
+### 4. Global but grounded
+
+Rise In's community spans 180+ countries. Content should feel universal — not US-centric, not assuming a specific regulatory context, not assuming a specific educational background. Examples should reflect the global developer community.
+
+---
+
+## Structural Habits
+
+- **Introduction:** 2–3 short paragraphs. Opens with something a developer would immediately recognize as true — a problem, a friction point, a surprising stat. States what the post covers and why it matters right now.
+- **Technical sections:** Use numbered steps, code examples, or comparisons when explaining how something works. Don't just describe — demonstrate.
+- **Body:** Each H2 section should answer one specific question. Someone skimming should understand what each section does before reading it.
+- **Conclusion:** Always ends with a community action — a bootcamp to join, a challenge to enter, a repo to fork, a Discord to join. Not just "thanks for reading."
+
+---
+
+## Anti-Patterns — Never Write Like This
+
+- No "Web3 is the future" without supporting it with specific, current evidence
+- No token price predictions or investment framing of any kind
+- No condescending explanations that assume developers can't handle complexity
+- No US-only examples or regulatory assumptions
+- No passive voice: "Solidity was developed by Ethereum" → "Ethereum's team developed Solidity"
+- Never end without a concrete next step or community action
+- No opening with "In today's rapidly evolving blockchain landscape..."
+
+---
+
+## Writing Rules (Non-Negotiable)
+
+- Open with a concrete builder scenario, a surprising stat, or a real friction point — not a definition
+- Paragraphs must be under 5 sentences
+- Active voice throughout
+- End every post with a specific community action or next step
+- Every factual claim must be cited with a [SOURCE: ...] placeholder
+- Technical claims must be current — web3 moves fast, flag anything that may be outdated
+
+---
+
+<!-- EXAMPLES_START -->
+<!-- High-scoring paragraphs from published posts will be added here automatically. -->
+<!-- EXAMPLES_END -->

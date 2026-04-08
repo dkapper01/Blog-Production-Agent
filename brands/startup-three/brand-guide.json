@@ -1,0 +1,62 @@
+{
+  "companyName": "JobNest.ai",
+  "websiteUrl": "https://jobnest.ai",
+  "businessDescription": "All-in-one AI platform for workforce assessment and upskilling — skills assessments, candidate-to-role matching, bite-sized learning modules, and continuous evaluation in a single platform for companies that want to measure real potential and act on it.",
+  "voice": "Direct and principle-driven — cuts through HR buzzwords to make a clear argument, backs it with data, and always connects insight to action.",
+  "tone": ["direct", "confident", "analytical", "no-nonsense", "practical"],
+  "targetAudience": "HR leaders, L&D professionals, and CHROs at growth-stage and enterprise companies who are responsible for hiring quality, workforce development, and talent strategy — and are frustrated that assessment and upskilling have lived in separate tools that don't talk to each other.",
+  "hardConstraints": [
+    {
+      "rule": "Always cite sources inline with hyperlinks.",
+      "example": "According to [Gartner's 2025 HR Technology Report](https://...)..."
+    },
+    {
+      "rule": "Never make up statistics — only use numbers that appear in the research notes.",
+      "example": "If no stat is found, write 'data unavailable' rather than estimating."
+    },
+    {
+      "rule": "Every post must have a clear thesis stated in the introduction.",
+      "example": "First paragraph ends with a specific, defensible claim the post will prove."
+    },
+    {
+      "rule": "Never reduce workforce topics to pure cost-cutting — always frame people development as a growth driver.",
+      "example": "Upskilling is not about cutting training budgets more efficiently. It's about making development land where it matters."
+    }
+  ],
+  "softPreferences": [
+    {
+      "preference": "Lead with the business problem, not the product category.",
+      "example": "Don't start with 'skills-based hiring is trending.' Start with the specific pain that makes it necessary."
+    },
+    {
+      "preference": "Use the measurement-action framework as a recurring anchor.",
+      "example": "When possible, tie arguments back to: you can't grow what you don't measure, and measuring without acting is just data collection."
+    },
+    {
+      "preference": "Be specific about what 'good' looks like — give decision-makers something concrete.",
+      "example": "Instead of 'improve your hiring process,' say 'reduce time-to-productivity for new hires by starting assessment before day one.'"
+    },
+    {
+      "preference": "Keep paragraphs under 5 sentences — HR leaders are busy and read on mobile between meetings.",
+      "example": "Dense paragraphs lose the reader. Short paragraphs signal confidence."
+    }
+  ],
+  "avoidTopics": [
+    "partisan political commentary",
+    "investment advice",
+    "medical diagnoses",
+    "content that frames employees as cost centers rather than assets",
+    "surveillance-framed workforce monitoring (distinguish assessment from surveillance explicitly)"
+  ],
+  "preferredWordCount": {
+    "min": 1000,
+    "max": 2000
+  },
+  "primaryLanguage": "en",
+  "secondaryLanguage": null,
+  "seoContext": {
+    "primaryMarket": "Global (English-speaking B2B)",
+    "keyTopicAreas": ["workforce assessment", "skills-based hiring", "employee upskilling", "talent development", "AI in HR", "candidate matching", "L&D strategy", "continuous performance evaluation"],
+    "competitorTypes": ["standalone assessment platforms", "standalone LMS platforms", "ATS vendors with assessment add-ons", "traditional HR software with learning modules"]
+  }
+}

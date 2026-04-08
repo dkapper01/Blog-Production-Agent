@@ -1,313 +1,216 @@
 # Blog Production Agent — User Guide
 
-*A step-by-step guide for creating research-backed blog posts from a single topic request.*
+*A plain-language guide to creating research-backed blog posts using the Blog Production Agent.*
 
 ---
 
 ## Table of Contents
 
 1. [What this tool does](#1-what-this-tool-does)
-2. [One-time setup](#2-one-time-setup)
-3. [Starting a session](#3-starting-a-session)
-4. [Writing a good topic request](#4-writing-a-good-topic-request)
-   - [4a. Dual-language posts (English + Turkish)](#4a-dual-language-posts-english--turkish)
+2. [How to start](#2-how-to-start)
+3. [Select your brand](#3-select-your-brand)
+4. [How to ask for a post](#4-how-to-ask-for-a-post)
+   - [4a. Write about a URL or article](#4a-write-about-a-url-or-article)
+   - [4b. Write in Turkish or both languages](#4b-write-in-turkish-or-both-languages)
+   - [4c. Use SEO keyword research](#4c-use-seo-keyword-research)
 5. [What happens while the agent runs](#5-what-happens-while-the-agent-runs)
 6. [Your output files — what you get](#6-your-output-files--what-you-get)
-7. [Customizing the brand and voice](#7-customizing-the-brand-and-voice)
-8. [The content library — your publishing history](#8-the-content-library--your-publishing-history)
-9. [Session logs](#9-session-logs)
+7. [Reviewing and rating a post](#7-reviewing-and-rating-a-post)
+8. [Setting up a brand](#8-setting-up-a-brand)
+9. [Tips for best results](#9-tips-for-best-results)
 10. [Troubleshooting](#10-troubleshooting)
-11. [Tips for best results](#11-tips-for-best-results)
 
 ---
 
 ## 1. What this tool does
 
-You give it a topic. It does the rest.
+You describe what you want to write. The agent does the research, writing, and quality review — then delivers a ready-to-publish package.
 
-The Blog Production Agent researches your topic from multiple angles, writes a full blog post in your brand voice, checks it for quality and accuracy, and delivers a ready-to-publish package that includes:
+Each run produces:
 
-- A complete, well-researched blog post (800–2,500 words, depending on the length you choose)
-- A second version of the same post in a different format (e.g., a listicle if the first was an explainer)
+- A complete blog post (800–2,500 words) in your brand voice
+- A second version in a different format (e.g. a listicle version of an explainer)
 - Ready-to-post copy for LinkedIn, Twitter, and Substack
-- An email teaser with subject line and preview text
-- Two headline and meta-description variants for A/B testing on your website
+- An email newsletter teaser with subject line and preview text
+- Two headline and meta-description variants for A/B testing
 
-Every claim in the post is backed by a real source. References appear at the bottom of each post as numbered, linked citations.
-
-The agent also learns over time. Each post it produces updates its understanding of which formats and topics perform best for your audience — so future posts improve automatically as the signal builds up.
+Every factual claim is cited. The agent also learns over time — each post updates its understanding of what performs best for your audience.
 
 ---
 
-## 2. One-time setup
+## 2. How to start
 
-These steps only need to be done once, the first time you use the tool.
+1. Open **Claude Code** on your computer
+2. Navigate to this project folder
+3. Start talking — no setup, no commands, no API key needed
 
-### 2a. Get an API key
-
-The agent uses Claude (an AI model by Anthropic) to do its work. You need an API key to access it.
-
-1. Go to **console.anthropic.com**
-2. Sign in or create an account
-3. Navigate to **Settings → API Keys**
-4. Click **Create Key**, give it a name, and copy the key
-
-### 2b. Add your API key to the project
-
-1. In the project root, find the file named `.env` (if it doesn't exist, create a new file with that exact name)
-2. Add this line to the file, replacing `your-key-here` with the key you copied:
-
-```
-ANTHROPIC_API_KEY=your-key-here
-```
-
-3. Save the file
-
-> **Important:** Never share your `.env` file or your API key with anyone. Treat it like a password.
-
-### 2c. Install the dependencies
-
-Open a terminal, navigate to the project root, and run:
-
-```
-npm install
-```
-
-This downloads everything the agent needs to work. It only takes a minute and only needs to be done once (or again if you update the project).
+The agent is always ready. Just type what you want.
 
 ---
 
-## 3. Starting a session
+## 3. Select your brand
 
-1. Open a terminal
-2. Navigate to the project root
-3. Run:
+Every session starts with a brand selection menu. The agent will always ask this first:
 
 ```
-npm start
+─────────────────────────────────────────────
+  SELECT BRAND
+─────────────────────────────────────────────
+  1. Startup One — Your first startup description
+  2. Startup Two — Your second startup description
+
+  Which brand is this post for?
+─────────────────────────────────────────────
 ```
 
-The agent opens with a welcome screen and immediately starts the intake wizard — a short series of questions to configure your post. Use the **arrow keys** to move between options and **Enter** to confirm each answer.
-
-```
-==================================================
-  Blog Production Agent
-==================================================
-  Answer a few questions to get started.
-  Use arrow keys to select, Enter to confirm.
-
-? What topic do you want to write about? › _
-```
-
-After you type your topic and press Enter, the remaining questions appear one at a time:
-
-```
-? Format?
-❯ Let the agent decide
-  Explainer — explain a concept or trend
-  How-to — step-by-step guide
-  Listicle — numbered list of tips/tools
-  Opinion — argue a point of view
-  Case study — real-world example
-
-? Language?
-❯ English only
-  Turkish only
-  Both English and Turkish
-
-? Tone?
-❯ Informative & analytical
-  Conversational & personal
-  Bold & opinionated
-  Practical & tactical
-
-? Target audience?
-❯ Use brand guide default
-  Customize...
-
-? SEO keywords?
-❯ Let the agent decide
-  Add keywords
-
-? Word count?
-  Short     (~800–1,200 words)
-❯ Standard  (~1,200–2,000 words)
-  Long      (~2,000–2,500 words)
-```
-
-Once you've answered all questions, the wizard shows a summary:
-
-```
-──────────────────────────────────────────────────
-  Summary
-──────────────────────────────────────────────────
-  Topic:    The rise of AI in Turkish startups
-  Format:   explainer
-  Language: English + Turkish
-  Tone:     informative and analytical
-  Audience: Technical professionals... (default)
-  Keywords: Agent decides
-  Length:   ~1,200–2,000 words
-──────────────────────────────────────────────────
-
-? Save format, language, tone, and word count as your defaults? › No
-? Start writing? › Yes
-```
-
-The agent then runs the full pipeline automatically. You don't need to do anything until it finishes and reports back.
-
-### Writing another post
-
-After each run completes, the agent asks:
-
-```
-? Write another post? › No
-```
-
-Select **Yes** to run the wizard again for a new post in the same session. Select **No** (or press **Ctrl+C** at any time) to exit. The agent saves the session log before closing.
-
-### Defaults
-
-The wizard remembers your preferred **format**, **language**, **tone**, and **word count** between sessions. The first time you run, these are pre-set to sensible values (let the agent decide the format, English, informative, standard length). After any run you can choose "Save as defaults" to update them — your selections will be pre-highlighted the next time you open the wizard.
+Reply with the number. Everything that follows — the brand voice, content library, keyword history, and audience data — comes from that brand's profile. Posts for different startups never mix.
 
 ---
 
-## 4. Choosing a topic
+## 4. How to ask for a post
 
-The only free-text question in the wizard is the topic. Everything else — format, language, tone, audience, keywords, word count — is selected from a menu.
+Type a plain sentence describing what you want. You don't need to use special syntax — just talk to it.
 
-**Tips for a good topic:**
-
-- **Be specific.** "AI tools for small businesses" will produce a broad survey. "How small e-commerce businesses are using AI to reduce customer service costs" will produce a focused, usable post.
-- **Name the outcome or the question.** A topic framed as a question ("Is remote work hurting junior employees?") gives the agent a clear thesis to build around.
-- **Don't include format instructions in the topic.** The format question handles that. Just describe what the post should be *about*.
-
-**Examples:**
-
+**Simple examples:**
 ```
-The rise of AI assessment tools in hiring
-Four-day work weeks: what the research actually shows
-How Turkish startups are competing with European tech companies
-Burnout prevention for early-stage founders
+Write a post about AI tools for small businesses
+Write a post about the future of remote work
+Write a post about how to build a second brain
 ```
+
+**With optional parameters:**
+```
+Write a short post about startup fundraising
+Write a listicle about productivity tools for founders
+Write a post about AI in hiring, targeting "AI assessment tools" and "skills-based hiring"
+Write a post about burnout prevention [PAUSE_AFTER_OUTLINE]
+```
+
+### All available options
+
+| What you want | How to say it | Default |
+|---|---|---|
+| Topic | Just state it | Required |
+| Language | "in Turkish", "in both English and Turkish" | English |
+| Format | "as an explainer / how-to / listicle / opinion / case study" | Agent decides |
+| Tone | "informative", "conversational", "bold", "practical" | Brand guide default |
+| Audience | "for [description]" | Brand guide default |
+| Keywords | "targeting [keyword], [keyword]" | Agent decides |
+| Word count | "short", "standard", or "long" | Standard (~1,200–2,000 words) |
+| Review outline before writing | Add `[PAUSE_AFTER_OUTLINE]` to your request | Off |
+| Skip the alternative format | Add `[SKIP_ALT_FORMAT]` to your request | Off |
+| Include SEO research | Add `[SEO_BRIEF]` to your request | Off |
 
 ---
 
-## 4a. Dual-language posts (English + Turkish)
+### 4a. Write about a URL or article
 
-The agent can produce two complete, independently written posts from a single research run — one in English and one in Turkish. The Turkish version is written natively for a Turkish audience, not translated from the English post.
-
-### How to request it
-
-In the wizard, when the **Language** question appears, select **Both English and Turkish**:
+Paste any article link directly into your request. The agent will read the article and ask you one follow-up question before it starts:
 
 ```
-? Language?
-  English only
-  Turkish only
-❯ Both English and Turkish
+Write a post about this: https://example.com/some-article
+Can you write about this article? https://example.com/some-article
 ```
 
-### What "natively written" means
+After fetching the article, the agent will ask:
 
-The two posts are not the same content in two languages. The agent produces two separate editorial plans (outlines) from the same research:
-
-- The **English post** is framed for a global professional audience
-- The **Turkish post** is framed for a Turkish professional audience — it prefers Turkey-specific data points from the research, uses Turkish company examples where relevant (Patika.dev, Trendyol, the Istanbul startup ecosystem), and asks the questions a Turkish reader actually has
-
-The core ideas, facts, and argument are the same. The examples, framing, and cultural references differ.
-
-### What you get
-
-A dual-language run produces double the output — one complete package per language:
-
-**English:**
 ```
-files/output/
-  2026-04-02-{topic}.md
-  2026-04-02-{topic}-social.json
-  2026-04-02-{topic}-email.json
-  2026-04-02-{topic}-variants.json
-  2026-04-02-{topic}-listicle.md       ← alternative format
-  2026-04-02-{topic}-listicle-social.json
-  ...
+─────────────────────────────────────────────
+  SOURCE ARTICLE DETECTED
+  "Article Title Here"
+─────────────────────────────────────────────
+  How should this post be written?
+
+  [A] Commentary / response — engage with the article's
+      arguments, agree or push back, add your perspective
+
+  [B] Your version of the same topic — cover the same
+      subject independently, with your own angle and voice
+
+  Reply A or B to continue.
+─────────────────────────────────────────────
 ```
 
-**Turkish (`-tr` suffix):**
-```
-files/output/
-  2026-04-02-{topic}-tr.md
-  2026-04-02-{topic}-tr-social.json
-  2026-04-02-{topic}-tr-email.json
-  2026-04-02-{topic}-tr-variants.json
-  2026-04-02-{topic}-tr-listicle.md    ← alternative format in Turkish
-  ...
-```
+- **Reply A** — the post will open by referencing the article and engage with its arguments directly. Good for LinkedIn thought-leadership responses.
+- **Reply B** — the agent covers the same topic in your voice without mentioning the source article. Good when you want to own a topic without appearing reactive.
 
-The Turkish social snippets, email teaser, and A/B variants are all written in Turkish in Gülcan's Turkish voice — flowing sentences, rhetorical questions, the warmth and self-deprecating humor characteristic of her Turkish writing.
-
-### What takes longer
-
-A dual-language run does more work. The research phase is the same length, but every subsequent stage runs twice (two outlines, two drafts, two editorial reviews, two publishers, two alternative formats). Expect roughly double the runtime of a single-language run.
-
-### Editorial independence
-
-The two posts go through separate editorial reviews. If the Turkish draft scores below the threshold and needs revision, the English post is not held up — it proceeds to publishing on its own. If one language fails completely (scores below 65 after a full rewrite), the agent publishes the passing language and reports the failure for the other.
+Either way, the article becomes part of the research. The agent supplements it with additional sources and writes the post in your brand voice.
 
 ---
 
-## 5. What happens while the agent runs
+### 4b. Write in Turkish or both languages
 
-After you press Enter, the agent runs a multi-stage process. This is entirely automatic — you don't need to do anything until it finishes. Here is what is happening at each stage:
+```
+Write a post about AI tools in Turkish
+Write a post about startup fundraising in both English and Turkish
+```
 
-### Stage 1 — Planning (seconds)
-The agent reads your request and breaks the topic into 3–5 focused angles to research. It also reads your brand configuration and voice guide to know how to write for you.
-
-### Stage 2 — Research (1–3 minutes)
-The agent researches each angle simultaneously — gathering facts, statistics, and sources from across the web. Each researcher saves its findings to a file in `files/research/`. Every fact gets a confidence rating so the agent knows which claims are well-supported and which need hedging.
-
-### Stage 2.5 — Conflict resolution (seconds)
-Before anything is written, the coordinator reads every research file and scans for contradictory statistics — for example, two researchers citing different growth rates for the same metric. When a conflict is found, the higher-confidence value is preferred and the discrepancy is flagged for the outline agent so it uses the correct figure and notes the conflict in the draft.
-
-### Stage 3 — Outline (30–60 seconds)
-A dedicated outline agent reads all the research and builds a structured plan for the post: section headings, key points, which facts belong where, and which keywords to place in each section.
-
-### Stage 4 — Writing (1–2 minutes)
-The writer reads the outline and the research and writes the full draft. It also produces a `citations.json` file that maps every claim in the post back to its source, and a `draft-meta.json` file with the post's title, slug, word count, and other metadata.
-
-### Stage 5 — Editorial review (30–60 seconds)
-Three reviewers run simultaneously:
-
-- **The editor** reads only the draft — no research, no brand guide. This gives it an independent perspective, like a fresh pair of eyes. It scores the post on clarity, accuracy, brand voice, and flow (0–100). Scores below 85 trigger automatic rework — either a targeted revision (65–84) or a full re-draft (<65). See Stage 6 for details.
-- **The SEO reviewer** checks keyword coverage, heading structure, and readability, and suggests meta descriptions.
-- **The brand checker** validates the draft against the hard constraints and topic blocklist in `memory/brand-guide.json`. Any hard violation blocks publishing, regardless of the editorial score.
-
-### Stage 6 — Revisions (if needed)
-If the editorial score is 65–84, the agent revises the draft and re-runs the editorial review. It does this at most twice before proceeding. If the score is below 65 on a first attempt, it rewrites the post from scratch. The agent will not publish a post that scores below 65 after a full rewrite.
-
-> If the editor finds any factual claims it cannot verify and considers them high-risk, the agent will pause and ask you whether to continue before publishing.
-
-### Stage 7 — Publishing the primary post (30–60 seconds)
-The publisher takes the finished draft and produces all the output files: the final post, social snippets, email teaser, and A/B headline variants. It also updates the content library and audience model.
-
-### Stage 8 — Alternative format (1–2 minutes)
-Using the same research, the agent produces a second version of the post in a different format:
-- If the primary was an explainer, opinion piece, or case study → the alternative is a **listicle**
-- If the primary was a how-to → the alternative is a **listicle**
-- If the primary was a listicle → the alternative is a **how-to**
-
-This second version skips the editorial review loop — it's derivative content, so one pass is enough.
-
-### Stage 9 — Voice guide update and final report
-If the post scored 85 or above, the agent extracts the best paragraph from the draft and appends it as a new example to `memory/gulcan-voice.md`. In a dual-language run, both the English and Turkish post can each contribute an example.
-
-The agent then prints a summary to the terminal showing all output file paths, word count, editorial score, SEO coverage, and the opening line of the LinkedIn post.
+In dual-language mode, both posts are written natively — the Turkish version is not a translation. They share the same research but have independent outlines, drafts, and editorial reviews. The Turkish post is written for a Turkish professional audience, with local examples and cultural context.
 
 ---
 
-## 6. Your output files — what you get
+### 4c. Use SEO keyword research
 
-All output files are saved to the `files/output/` folder. Every file for one post shares the same date and slug prefix — for example, a post about AI hiring tools published on 1 April 2026 would produce:
+Add `[SEO_BRIEF]` to your request to run keyword research before writing.
+
+**Discovery mode** — find keyword opportunities for your business:
+```
+Find keyword opportunities for my business [SEO_BRIEF]
+```
+The agent will present a ranked list of keyword opportunities and ask you to pick one before writing.
+
+**Enrichment mode** — research keywords for a specific topic you already have:
+```
+Write a post about AI hiring tools [SEO_BRIEF]
+```
+The agent runs keyword research scoped to your topic, then proceeds automatically.
+
+---
+
+## 4. What happens while the agent runs
+
+After you send your request, everything runs automatically. Here is what is happening at each stage:
+
+### Planning (seconds)
+The agent reads your request, breaks the topic into 3–5 research angles, checks your content library for prior coverage, and loads your brand guide and voice profile.
+
+### Research (1–3 minutes)
+One researcher per angle runs simultaneously, gathering facts, statistics, and sources. If you provided a source URL, its content is included alongside the research. Every finding gets a confidence rating so the agent knows which claims are well-supported.
+
+### Conflict resolution (seconds)
+Before writing, the agent scans all research files for contradictory statistics. When two sources disagree on a number, the higher-confidence value wins and the discrepancy is noted.
+
+### Outline (30–60 seconds)
+An outline agent reads all research and builds a structured plan: section headings, key points, which facts belong where, and keyword placement.
+
+> **If you added `[PAUSE_AFTER_OUTLINE]`:** The agent will print the outline and stop here. Reply with "looks good" or "continue" to proceed, or give feedback to adjust the structure before writing begins.
+
+### Writing (1–2 minutes)
+The writer drafts the full post following the outline. Every factual claim gets a citation placeholder. The writer also produces a metadata file and a citation map.
+
+### Quality review (30–60 seconds)
+Four reviewers run simultaneously:
+- **Section reviewer** — scores each section independently for voice, argument clarity, and fact density
+- **Editor** — evaluates the full post for coherence, structure, and citation completeness
+- **SEO agent** — checks keyword coverage, heading structure, and readability
+- **Brand checker** — validates every hard rule in your brand guide
+
+A composite score (0–100) is computed. Posts below 85 are revised automatically. Posts below 65 after a full rewrite are not published.
+
+### Revisions (if needed)
+If the score is 65–84, the agent revises the draft and re-reviews. It does this at most twice. If a factual claim is flagged as potentially unverifiable, the agent pauses and asks you whether to continue before publishing.
+
+### Publishing (30–60 seconds)
+The publisher writes the final post, social copy, email teaser, and A/B variants to `files/output/`. The content library and audience model are updated.
+
+### Alternative format (1–2 minutes)
+Using the same research, a second version is produced in a different format (e.g. a listicle if the primary was an explainer). This skips the full editorial loop.
+
+---
+
+## 5. Your output files — what you get
+
+All files land in `files/output/` with a shared date-and-slug prefix. For a post about AI hiring tools published on 1 April 2026:
 
 ```
 files/output/
@@ -316,205 +219,151 @@ files/output/
   2026-04-01-best-ai-assessment-tools-for-employers-email.json
   2026-04-01-best-ai-assessment-tools-for-employers-variants.json
   2026-04-01-best-ai-assessment-tools-for-employers-listicle.md
-  2026-04-01-best-ai-assessment-tools-for-employers-listicle-social.json
-  2026-04-01-best-ai-assessment-tools-for-employers-listicle-email.json
-  2026-04-01-best-ai-assessment-tools-for-employers-listicle-variants.json
 ```
+
+For dual-language runs, Turkish files get a `-tr` suffix.
 
 ### The blog post (`.md`)
+A Markdown file ready to paste into your CMS (WordPress, Webflow, Ghost, Substack, etc.). Contains front matter metadata, the full post body, and a numbered reference list at the bottom.
 
-A Markdown file ready to paste into your CMS (WordPress, Webflow, Ghost, Substack, etc.). It contains:
+### Social copy (`-social.json`)
+Ready-to-post copy for three platforms:
+- **LinkedIn** — 150–300 words, personal opening, ends with a question or call to action
+- **Twitter** — a single punchy sentence under 280 characters
+- **Substack** — 2–3 warm sentences for a Substack Note
 
-- **Front matter** — structured metadata at the top (title, date, summary, keywords, word count)
-- **The post body** — exactly as the writer produced it, never modified after the editorial pass
-- **References** — a numbered, linked list of every source cited in the post
-
-### Social snippets (`-social.json`)
-
-Ready-to-post copy for three platforms, all written in your voice:
-
-- **LinkedIn** — 150–300 words, personal opening hook, ends with a question or call to action
-- **Twitter** — a single punchy sentence under 280 characters to open a thread
-- **Substack** — 2–3 warm sentences for a Substack Note, ends with a link placeholder (`CTA_URL`)
-
-Replace `CTA_URL` with the live URL once the post is published.
+Replace `CTA_URL` in each file with the live URL once the post is published.
 
 ### Email teaser (`-email.json`)
-
-Contains everything you need for a newsletter send:
-
-- **Subject line** — 60 characters max, factual and specific
-- **Preview text** — 90 characters max, shown in the inbox before the reader opens
-- **Body** — 3–5 sentences in your voice
-- **CTA text and URL** — replace `CTA_URL` with the live link
+Everything you need for a newsletter send: subject line, preview text, body copy, and CTA. Subject line is under 60 characters; preview text under 90.
 
 ### A/B variants (`-variants.json`)
-
-Two headline and meta-description combinations for testing different angles on your website or newsletter:
-
-- **Variant A** — the published title and meta
-- **Variant B** — a genuinely different angle (a surprising statistic, a contrarian take, a question, or outcome-led framing)
-
-Use these to run a simple split test on your homepage hero or email subject line.
+Two headline and meta-description combinations for split testing — Variant A is the published title; Variant B is a genuinely different angle (a surprising statistic, a contrarian take, or outcome-led framing).
 
 ---
 
-## 7. Customizing the brand and voice
+## 6. Reviewing and rating a post
 
-The agent's writing is controlled by two files in the `memory/` folder. You can edit these at any time — the agent reads them fresh at the start of every run.
+After each run completes, the agent will show you a review prompt:
 
-### `memory/brand-guide.json`
+```
+─────────────────────────────────────────────
+  POST REVIEW — "Post Title Here"
+  Published: files/output/2026-04-01-{slug}.md
+  Word count: 1,480 | QA Score: 88
+─────────────────────────────────────────────
+  Rate each 1–5 (1 = poor, 5 = excellent):
 
-This file defines the factual and structural rules for every post. Open it in any text editor to change:
+  CLARITY         — Easy to follow, well-structured?
+  TONE MATCH      — Sounds like you, not a generic AI blog?
+  USEFULNESS      — Would your reader take something actionable?
+  BRAND FIT       — Represents you professionally?
+  SEO NATURALNESS — Keywords feel integrated, not forced?
 
-| Setting | What it controls |
-|---|---|
-| `voice` | One-sentence description of your brand's writing style |
-| `tone` | A list of tone words (e.g. `"analytical"`, `"direct"`, `"warm"`) |
-| `targetAudience` | Who the posts are written for |
-| `hardConstraints` | Rules the agent must never break (e.g. always cite sources) |
-| `softPreferences` | Guidelines the agent should follow when possible |
-| `avoidTopics` | Topics the agent will refuse to write about |
-| `preferredWordCount` | Minimum and maximum word count for posts |
+  FREEFORM (press Enter to skip):
+  → What worked well?
+  → What would you change?
 
-**Example — changing the target audience:**
-```json
-"targetAudience": "Founders and operators at early-stage B2B startups"
+  PUBLISH DECISION: [A] As-is  [B] Minor edits  [C] Major edits  [D] Reject
+─────────────────────────────────────────────
 ```
 
-**Example — adjusting word count:**
-```json
-"preferredWordCount": { "min": 800, "max": 1500 }
-```
-
-### `memory/gulcan-voice.md`
-
-This is the detailed voice profile the agent uses when writing posts and social content. It describes:
-
-- How posts should open
-- The type of personal details and vulnerability to include
-- Humor style and where to use it
-- Language patterns in both English and Turkish
-- Structural patterns by format (long-form, LinkedIn, etc.)
-- Anti-patterns — specific phrases and habits to avoid
-
-Edit this file to match your actual writing style. The more specific and personal it is, the better the agent will mimic your voice. You can add your own writing samples as examples.
-
-The `## Examples` section at the bottom of the file is populated automatically — every time a post scores 85 or above, the agent appends the best paragraph from that post as a real example for future reference. You don't need to manage this section manually.
+You can answer all of it, some of it, or just press Enter to skip. Your ratings are saved to `files/feedback/` and feed into the audience model — the agent uses this data to produce better posts over time.
 
 ---
 
-## 8. The content library — your publishing history
+## 8. Setting up a brand
 
-Every post the agent publishes is registered in `memory/content-library.json`. This file is a running record of everything produced, including:
+Each startup has its own profile folder under `brands/`. The agent reads these files fresh at the start of every run.
 
-- Title, slug, and summary
-- Keywords used
-- Date published
-- Path to the output file
-- Word count and citation count
+### Adding or renaming a startup
 
-You don't need to edit this file. The agent maintains it automatically. You can open it to browse your publishing history or to check whether a topic has already been covered.
-
-### Audience signals
-
-The agent also maintains `memory/audience-model.json`. Each time a post is published, the agent adds an entry to this file recording the format, keywords, and publish date.
-
-Once you start tracking engagement on your published posts, you can manually add an `engagementScore` (a number from 0–100) to each entry. The agent will use this data to automatically prefer formats and keywords that perform well with your audience.
-
-**Example — adding an engagement score after a post goes live:**
-
-Open `memory/audience-model.json` and find the entry for the post:
+Open `brands/index.json` and add an entry:
 
 ```json
 {
-  "postSlug": "best-ai-assessment-tools-for-employers",
-  "format": "explainer",
-  "keywords": ["AI assessment tools", "AI hiring tools"],
-  "publishedAt": "2026-04-01T12:00:00.000Z",
-  "engagementScore": 82,
-  "notes": "Strong LinkedIn shares, lower email open rate"
+  "brands": [
+    { "slug": "my-startup", "name": "My Startup", "description": "One-line description" }
+  ]
 }
 ```
 
-Add `"engagementScore"` and optionally `"notes"`. Save the file. The agent will factor this in on the next run.
+Then create a folder `brands/my-startup/` with four files — copy the template from `brands/startup-one/` as a starting point.
+
+### `brands/{name}/brand-guide.json`
+
+The rules for every post from this brand. The fields that matter most:
+
+| Field | What to fill in |
+|---|---|
+| `voice` | One sentence: how this brand writes |
+| `targetAudience` | Who the readers are |
+| `tone` | 3–5 tone words |
+| `hardConstraints` | Rules the agent must never break |
+| `avoidTopics` | Topics to refuse entirely |
+
+### `brands/{name}/voice.skill`
+
+The detailed voice profile for the founder or author writing for this brand. This is the most important file to fill in well — it controls how every post sounds.
+
+Open the template and replace the placeholder sections with:
+
+- A description of who the writer is
+- How their posts typically open
+- What makes their perspective distinctive
+- Phrases and habits characteristic of their writing
+- Things they would never write
+
+The **Examples** section at the bottom is populated automatically — every time a post scores 85 or above, the agent appends the best paragraph as a real example. You can also paste in paragraphs from posts you're proud of.
+
+### `brands/{name}/content-library.json` and `audience-model.json`
+
+Both are maintained automatically. The content library tracks every published post (used to avoid repeating topics). The audience model tracks which formats and keywords perform best — add an `engagementScore` (0–100) to any entry after a post goes live to help the agent learn what works.
 
 ---
 
-## 9. Session logs
+## 9. Tips for best results
 
-Every time you run the agent, it saves a log of the full session to the `logs/` folder. Each session gets its own folder named with the date and time:
+**Be specific, but not too narrow.** "AI tools for small businesses" will produce a broad survey. "How small e-commerce businesses are using AI to reduce customer service costs" will produce a focused, actionable post. But going too narrow (a single company, a two-year window) limits what the researchers can find.
 
-```
-logs/
-  session_20260401_143022/
-    transcript.txt      ← full conversation with the agent
-    tool_calls.jsonl    ← detailed record of every action taken
-```
+**Use URLs when you have a source.** If you've read an article you want to respond to or build on, paste the link. It's faster than describing it, and the agent will read the full article rather than guessing what it says.
 
-The transcript is a plain-text file you can open in any editor. The tool calls file is more technical — it records every file read, file written, and web search the agent performed. You generally won't need to look at it, but it's useful if something unexpected happened and you want to understand what the agent did.
+**Name the audience.** "For HR managers evaluating new tools" shapes every word choice, example, and recommendation. Without it, the agent falls back to your brand guide default.
+
+**Add feedback after posts go live.** The audience model only becomes useful when you give it signal. A minute spent rating a post after it publishes is worth several future runs that automatically avoid formats or angles that didn't land.
+
+**Don't edit the draft before reading the editorial report.** The draft is at `files/drafts/draft.md` and the report is at `files/drafts/editorial-report.json`. If a section surprised you, the report will explain the agent's reasoning before you start making changes.
+
+**Use `[PAUSE_AFTER_OUTLINE]`** when you want to review the structure before a long run. It's a one-second addition that lets you redirect before the writing starts rather than after.
 
 ---
 
 ## 10. Troubleshooting
 
-### "ANTHROPIC_API_KEY not found"
-
-The agent cannot find your API key. Check that:
-1. The file `.env` exists in the project root
-2. It contains a line that starts with `ANTHROPIC_API_KEY=`
-3. The key itself is correct — no extra spaces, no quotes around the value
-
-### The agent stops mid-run with an error message
-
-The agent will print a clear description of what failed and at which stage. Common causes:
-
-- **Network issue** — The agent retries automatically on temporary connection errors. If it fails after multiple retries, check your internet connection and try again.
-- **API rate limit** — If you run the agent many times in quick succession, you may hit Anthropic's rate limits. Wait a minute and try again.
-- **File not found** — If the agent says it can't find `memory/brand-guide.json` or `memory/gulcan-voice.md`, make sure those files exist in the `memory/` folder at the project root.
-
 ### The agent pauses and asks about "factual flags"
-
-The editor found one or more claims in the draft that it considers potentially unverifiable or risky. The agent will describe each flagged claim and ask whether to continue.
-
-- If you recognise the claim and trust it, type `continue` to proceed to publishing.
-- If you're unsure, type `stop` to abort the run. You can then review the draft at `files/drafts/draft.md` and the editorial report at `files/drafts/editorial-report.json` before deciding what to do.
+The editor found one or more claims it considers potentially unverifiable. The agent will describe each flagged claim and ask whether to continue.
+- If you recognise the claim and trust it, reply `continue`
+- If you're unsure, reply `stop` — then review `files/drafts/draft.md` and `files/drafts/editorial-report.json` before deciding
 
 ### The post doesn't sound like my voice
+Open `.claude/skills/gulcan-voice.skill` and:
+1. Look at the **Anti-Patterns** section — add any phrases or habits you want to explicitly avoid
+2. Look at the **Examples** section — paste in a paragraph or two from your best actual writing
+3. Be specific: "uses 1–2 rhetorical questions per section" is more useful than "sounds conversational"
 
-The agent writes in the style described in `memory/gulcan-voice.md`. If the output doesn't feel right:
-
-1. Open `memory/gulcan-voice.md`
-2. Look at the **Anti-Patterns** section — add any phrases or habits you want to explicitly avoid
-3. Look at the **Examples** section — paste in one or two paragraphs you've actually written as concrete examples of your voice
-4. Be specific: "uses 1–2 rhetorical questions per section" is more useful than "sounds conversational"
-
-The more specific and personal the voice guide, the more accurately the agent will write in your style. Every high-scoring post also adds an example automatically, so the guide improves with use.
-
-### The output folder is empty
-
+### The output folder is empty after a run
 If the agent completed but nothing appeared in `files/output/`, check:
-1. The editorial score — if it fell below 65 after a full rewrite, the agent will refuse to publish and will have reported this in the terminal
-2. The session transcript in `logs/` for details on what happened
+- The terminal output — if the editorial score fell below 65 after a full rewrite, the agent refuses to publish and explains why
+- `files/drafts/editorial-report.json` for details on what failed
+
+### The agent stopped mid-run
+The agent prints a clear description of what failed and at which stage. It writes a checkpoint to `files/checkpoint.json` as it runs — this file shows how far it got. Common causes:
+- **Network issue** — the agent retries automatically; if it fails after multiple retries, check your connection and try again
+- **Research failure** — if fewer than two research files were produced with sufficient findings, the agent halts and reports the gap
+
+### I want to re-run a specific stage
+The agent doesn't currently support resuming from a checkpoint mid-run. If a run fails partway through, start a new run with the same request — research is fast and the output files will overwrite cleanly.
 
 ---
 
-## 11. Tips for best results
-
-**Be specific about your topic — but not too narrow in scope.** Vague topics produce vague posts, but very broad topics carry a different risk: the coordinator breaks them into 3–5 subtopics and assigns one researcher per subtopic. If the topic is wide enough to have many distinct dimensions (clinical, regulatory, economic, ethical), the coordinator may focus on some and miss others entirely — no agent has a mandate to notice the gap. A well-scoped topic is specific enough to have a clear argument but narrow enough that 3–5 angles give full coverage. "How AI-assisted diagnostics are reducing misdiagnosis rates in radiology" is better than "AI in healthcare" and better than "the role of AI in improving radiology diagnostic accuracy in urban hospitals in the United States between 2022 and 2024".
-
-**Name the audience.** "For HR managers evaluating new tools" tells the agent who it's writing for and shapes every word choice, example, and recommendation.
-
-**Specify keywords only when you mean it.** The agent will place every keyword you give it somewhere in the post. Don't give it ten keywords for a 1,500-word article — three or four focused terms is plenty.
-
-**Add engagement scores.** The audience model only becomes valuable when you give it feedback. After your posts go live, take five minutes to add scores to `memory/audience-model.json`. Over time, the agent will automatically favour the formats and topics that actually drive results.
-
-**Let the voice guide grow.** When a post comes out well, you'll see it added to the Examples section of `memory/gulcan-voice.md` automatically. You can also add your own writing samples at any time — pasting in a paragraph or two from your best LinkedIn posts or a Substack note you were proud of goes a long way.
-
-**Don't edit the draft before checking the editorial report.** The draft is at `files/drafts/draft.md` and the editorial report is at `files/drafts/editorial-report.json`. If you want to understand why the agent made certain choices — or why a section was flagged — read those before making manual edits.
-
-**Run it again with a different format.** If you get an explainer and want to try the same topic as a how-to, just run the agent again and specify the format in your request. The research stage is quick — it will re-research the topic and produce a structurally different post.
-
----
-
-*For issues or feedback, check the session logs in the `logs/` folder — they contain a full record of what the agent did and any errors it encountered.*
+*For questions or issues, describe the problem to Claude Code and include the relevant stage — it can read the draft and report files directly to help diagnose what happened.*

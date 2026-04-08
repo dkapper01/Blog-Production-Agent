@@ -14,6 +14,10 @@ Write a post about the future of remote work in Turkish
 Write a post about second brain tools in both English and Turkish
 Write a post about startup fundraising [PAUSE_AFTER_OUTLINE]
 Write a post about Web3 for developers [SKIP_ALT_FORMAT]
+Find keyword opportunities for AI productivity tools [SEO_BRIEF]
+Write a post about remote work tools [SEO_BRIEF]
+Write a post about https://example.com/some-article
+Can you write about this? https://example.com/some-article
 ```
 
 ## Intake parameters
@@ -29,6 +33,8 @@ Write a post about Web3 for developers [SKIP_ALT_FORMAT]
 | **Word count** | "short (~800–1200)", "standard (~1200–2000)", "long (~2000–2500)" | Standard |
 | **Pause for review** | `[PAUSE_AFTER_OUTLINE]` anywhere in request | Off |
 | **Skip alt format** | `[SKIP_ALT_FORMAT]` anywhere in request | Off |
+| **SEO brief** | `[SEO_BRIEF]` anywhere in request | Off |
+| **Source URL** | Paste any `https://` URL anywhere in the request | None — agent asks intent if detected |
 
 ---
 
@@ -60,6 +66,8 @@ Write a post about Web3 for developers [SKIP_ALT_FORMAT]
 | Brand report | `files/drafts/brand-report.json` |
 | Alt-format outline | `files/drafts/outline-{format}.json` |
 | Alt-format draft | `files/drafts/draft-{format}.md` |
+| SEO keyword opportunities | `files/seo/keyword-opportunities.json` |
+| SEO content brief | `files/seo/selected-brief.json` |
 
 ### Dual-language runs
 
@@ -85,13 +93,111 @@ Output paths:
 
 ## Your workflow
 
+### Brand Selection (always runs first)
+
+Before anything else — before Step 0, before parsing the request — show the brand menu.
+
+Read `brands/index.json` to get the brand list. Display:
+
+```
+─────────────────────────────────────────────
+  SELECT BRAND
+─────────────────────────────────────────────
+  1. [Brand Name 1] — [description]
+  2. [Brand Name 2] — [description]
+  3. [Brand Name 3] — [description]
+
+  Which brand is this post for?
+─────────────────────────────────────────────
+```
+
+Wait for the user's reply. Set `activeBrand` to the selected slug and `brandPath` to `brands/{activeBrand}`. All subsequent file references use `{brandPath}` instead of `memory/`:
+
+| Old path | New path |
+|---|---|
+| `{brandPath}/brand-guide.json` | `{brandPath}/brand-guide.json` |
+| `{brandPath}/audience-model.json` | `{brandPath}/audience-model.json` |
+| `{brandPath}/content-library.json` | `{brandPath}/content-library.json` |
+| `{brandPath}/voice.skill` | `{brandPath}/voice.skill` |
+
+The `files/` directory (research, drafts, output, seo) is shared across brands — no change to those paths.
+
+---
+
+### Step 0 — SEO keyword research (opt-in)
+
+**Triggered by:** `[SEO_BRIEF]` in the user's request. Skip this step entirely if not present.
+
+**Two modes:**
+- **Discovery mode** — no topic provided (e.g. "find keyword opportunities"): run the skill, present results, wait for user selection, then set topic from selection before proceeding to Step 1.
+- **Enrichment mode** — topic already provided: run keyword research scoped to that topic, then continue immediately to Step 1.
+
+**Spawn one `seo-researcher` subagent.** Pass it:
+- The full content of `.claude/skills/seo-keyword-brief.skill` as its operating instructions
+- The full content of `{brandPath}/brand-guide.json` (inline) — provides the website URL, audience, and business description required by the skill's Step 1
+- In enrichment mode: "This is enrichment mode. Research keyword opportunities specifically for this topic: {topic}. Set the highest-priority keyword in `selected-brief.json` to the best keyword targeting this topic."
+- In discovery mode: "This is discovery mode. Find the top 10 keyword opportunities for this business. Write all 10 to `files/seo/keyword-opportunities.json` and the priority-1 brief to `files/seo/selected-brief.json`."
+
+**Discovery mode — after subagent completes:**
+Read `files/seo/keyword-opportunities.json` and present a numbered list to the user:
+
+```
+─────────────────────────────────────────────
+  SEO KEYWORD OPPORTUNITIES
+─────────────────────────────────────────────
+  #   Keyword                        Difficulty   Priority
+  1.  [keyword]                      Kolay        9/10
+  2.  [keyword]                      Orta         8/10
+  ...
+
+  Select a number to write a post about that keyword.
+─────────────────────────────────────────────
+```
+
+Wait for the user's selection. Once received, set `topic` to the selected keyword and `keywords` to its `secondaryKeywords` from `files/seo/selected-brief.json`. Then proceed to Step 1.
+
+**Enrichment mode** — proceed directly to Step 1 after the subagent completes.
+
+---
+
 ### Step 1 — Parse intake, detect language, write RunConfig
 
 **Do this before reading any files or spawning any agents.**
 
+**URL detection (check first):** Scan the user's message for any `https?://` URL. If one is found:
+
+1. Fetch the URL using WebFetch and extract: title, main body text, headings, and author if present.
+2. Store as `sourceUrl` in RunConfig and hold the fetched content in memory as `sourceArticleContent`.
+3. If the user's message contains no explicit topic, derive the topic from the article's title and first paragraph.
+4. Ask the user this follow-up question **before proceeding** — do not write RunConfig or spawn anything yet:
+
+```
+─────────────────────────────────────────────
+  SOURCE ARTICLE DETECTED
+  "{article title}"
+─────────────────────────────────────────────
+  How should this post be written?
+
+  [A] Commentary / response — engage with the article's
+      arguments, agree or push back, add your perspective
+
+  [B] Your version of the same topic — cover the same
+      subject independently, with your own angle and voice
+
+  Reply A or B to continue.
+─────────────────────────────────────────────
+```
+
+5. Wait for the user's reply. Set `urlIntent: "commentary"` for A, `urlIntent: "own_version"` for B.
+6. Then continue parsing the rest of the intake fields and write RunConfig.
+
+---
+
 Parse the user's request into these fields:
 
-- `topic` — required; if empty, ask before proceeding
+- `topic` — required; if empty and no URL was found, ask before proceeding
+- `sourceUrl` — URL if detected, otherwise `null`
+- `urlIntent` — `"commentary"` | `"own_version"` | `null`
 - `languages` — detect from message:
   - `['en', 'tr']` — any of: "both English and Turkish", "dual language", "hem İngilizce hem Türkçe", "iki dilde"
   - `['tr']` — "in Turkish", "Türkçe", or the request is written in Turkish
@@ -103,10 +209,13 @@ Parse the user's request into these fields:
 - `wordCountRange` — derive from target: short = 800–1200, standard = 1200–2000, long = 2000–2500
 - `pauseAfterOutline` — `true` if `[PAUSE_AFTER_OUTLINE]` in request
 - `skipAltFormat` — `true` if `[SKIP_ALT_FORMAT]` in request
+- `seoBrief` — `true` if `[SEO_BRIEF]` in request
 
 Write the parsed config to `files/run-config.json` before proceeding. This enables recovery if the run crashes.
 
-**Topic decomposition:** Break the topic into 3–5 focused subtopics. Each must be narrow enough for one researcher to cover in depth.
+**Topic decomposition:**
+- If `seoBrief: true`: read `files/seo/selected-brief.json` and derive subtopics from its `contentOutline.sections` (H2-level headings only, limit 3–5). Skip the coordinator's own decomposition.
+- Otherwise: break the topic into 3–5 focused subtopics. Each must be narrow enough for one researcher to cover in depth.
 
 ---
 
@@ -114,12 +223,12 @@ Write the parsed config to `files/run-config.json` before proceeding. This enabl
 
 Use the Read tool to load all four files in one response (parallel reads):
 
-- `memory/brand-guide.json`
-- `.claude/skills/gulcan-voice.skill` — voice profile (read-only)
-- `memory/audience-model.json`
-- `memory/content-library.json`
+- `{brandPath}/brand-guide.json`
+- `{brandPath}/voice.skill` — voice profile (read-only)
+- `{brandPath}/audience-model.json`
+- `{brandPath}/content-library.json`
 
-Pass the full content of `.claude/skills/gulcan-voice.skill` inline whenever a prompt says `{voiceGuideText}`.
+Pass the full content of `{brandPath}/voice.skill` inline whenever a prompt says `{voiceGuideText}`.
 
 **Format selection:** If `format` is null in RunConfig and `topPerformingFormats` is non-empty in the audience model, use the top-performing format. Otherwise default to `explainer`.
 
@@ -169,6 +278,27 @@ PRIOR COVERAGE (avoid repeating these angles):
 {priorCoverageList}
 ```
 
+**Source article pre-load (if `sourceUrl` is set):** Before spawning researchers, write the fetched article content to `files/research/source-article.json` in the standard research file format:
+
+```json
+{
+  "slug": "source-article",
+  "subtopic": "Source article: {article title}",
+  "summary": "...",
+  "keyFindings": [
+    { "claim": "...", "source": "{sourceUrl}", "confidence": 0.85 }
+  ],
+  "targetFacts": [],
+  "usefulQuotes": [],
+  "dataGaps": [],
+  "sources": ["{sourceUrl}"]
+}
+```
+
+Extract key claims from the fetched content as `keyFindings`. Use `confidence: 0.85` for all claims (credible secondary — the article is a source, not a primary study). Include the article's main argument as the first finding.
+
+Add `"source-article"` to the research slugs list passed to all downstream agents. Researchers should treat it as a peer research file — they supplement it, not replace it.
+
 After all researchers complete, write a checkpoint:
 `files/checkpoint.json` → `{ "stage": "Research", "completedAt": "<ISO datetime>", "runTopic": "<topic>" }`
 
@@ -212,6 +342,9 @@ After ALL researchers complete and Step 3.5 is done:
 - The resolvedConflicts list (inline JSON)
 - The research slugs (so the agent can read files for detail if needed)
 - The prior coverage list with instruction: "Gülcan has previously covered these angles. Choose section framing that builds on or differentiates from prior posts — do not repeat arguments already made."
+- If `seoBrief: true` in RunConfig: the full content of `files/seo/selected-brief.json` (inline), with instruction: "An SEO brief has been pre-researched for this topic. Use the competitor weaknesses, PAA questions, and content outline sections as inputs — but you own the final structure. Do not copy the brief verbatim. Incorporate the `secondaryKeywords` naturally throughout."
+- If `urlIntent: "commentary"`: pass the source article's title, author, and main argument (from `files/research/source-article.json`) with this instruction: "This post is a direct commentary on the source article. Open by referencing the article and its argument. Structure sections to engage with its claims — agree, challenge, or extend them. The writer's personal experience and data should be the counterweight or complement."
+- If `urlIntent: "own_version"`: pass the source article's headings (from `files/research/source-article.json`) with this instruction: "A source article on this topic exists (do NOT cite it or reference it directly). Use its structure only to understand what ground has been covered. Choose a differentiated angle and framing — same topic, her own perspective."
 - Output path: `files/drafts/outline.json`
 
 The outline agent must produce a JSON outline with:
@@ -260,7 +393,7 @@ BRAND GUIDE:
 {full brand-guide.json pasted inline}
 
 VOICE GUIDE:
-{voiceGuideText — full content of .claude/skills/gulcan-voice.skill}
+{voiceGuideText — full content of {brandPath}/voice.skill}
 
 TASK: Write a {format} blog post in {language} on this topic:
 "{topic}"
@@ -466,6 +599,8 @@ ISOLATION RULE: Read ONLY {draftPath} and {draftMetaPath}. No other files.
 
 Same inputs and output format as current system — draft path, draft-meta path, and target keywords. Output to `{seoAnalysisPath}`.
 
+If `seoBrief: true` in RunConfig, also pass the content of `files/seo/selected-brief.json` inline with instruction: "Evaluate keyword coverage against this brief's `targetKeyword`, `secondaryKeywords`, and `geoOptimization.conversationalQueryVariants`. Score GEO readiness using the brief's `geoOptimization` criteria as your benchmark."
+
 #### Agent 4: Brand Checker
 
 Task prompt:
@@ -478,7 +613,7 @@ BRAND GUIDE (pasted inline):
 {full brand-guide.json}
 
 VOICE GUIDE (pasted inline):
-{voiceGuideText — full content of .claude/skills/gulcan-voice.skill}
+{voiceGuideText — full content of {brandPath}/voice.skill}
 
 TASK: Read the draft at {draftPath}.
 
@@ -619,9 +754,9 @@ After each branch passes triage (compositeScore ≥ 85, blocksPublishing = false
 **Single-language run:** Spawn one `publisher` subagent. Pass it:
 
 - Draft path, metadata path, citations path
-- Voice guide path: `.claude/skills/gulcan-voice.skill`
-- Content library path: `memory/content-library.json`
-- Audience model path: `memory/audience-model.json`
+- Voice guide path: `{brandPath}/voice.skill`
+- Content library path: `{brandPath}/content-library.json`
+- Audience model path: `{brandPath}/audience-model.json`
 - Language
 - The compositeScore (publisher must include it in the output file's frontmatter as `compositeScore:`)
 
@@ -732,7 +867,7 @@ If a branch is eligible, spawn a `voice-curator` subagent:
 ROLE: You are the Voice Curator for Gülcan Yayla's blog system.
 
 TASK: Read the draft at {draftPath}.
-Read the voice profile at .claude/skills/gulcan-voice.skill (for the rules, anti-patterns, and any existing examples).
+Read the voice profile at {brandPath}/voice.skill (for the rules, anti-patterns, and any existing examples).
 
 Select ONE paragraph (3–6 sentences) from the draft that best exemplifies Gülcan's voice.
 
@@ -759,17 +894,17 @@ OUTPUT FILE: files/drafts/voice-example[-lang].json
 
 After the voice-curator returns `eligible: true`, apply the update:
 
-1. Read `.claude/skills/gulcan-voice.skill`
+1. Read `{brandPath}/voice.skill`
 2. Count `### Example` entries between `<!-- EXAMPLES_START -->` and `<!-- EXAMPLES_END -->` (add those markers at the end of the file if not yet present)
 3. If count ≥ 5: find the entry with the lowest compositeScore value in its parentheses. Remove it. Renumber remaining entries consecutively from 1.
 4. Append the new `exampleBlock` after the last existing entry
-5. Write the updated file back to `.claude/skills/gulcan-voice.skill`
+5. Write the updated file back to `{brandPath}/voice.skill`
 
 If both language branches are eligible, run both voice-curator agents in parallel and append EN example first, TR example second.
 
 #### 11b — Audience model update
 
-For every branch that completed publishing (regardless of feedback), append a signal to `memory/audience-model.json`:
+For every branch that completed publishing (regardless of feedback), append a signal to `{brandPath}/audience-model.json`:
 
 ```json
 {
@@ -815,7 +950,7 @@ Report the following (concisely — detail lives in the files):
 
 ## Rules
 
-- Never skip loading brand-guide.json and .claude/skills/gulcan-voice.skill in Step 2 — voiceGuideText must be injected into every writer's prompt
+- Never skip loading brand-guide.json and {brandPath}/voice.skill in Step 2 — voiceGuideText must be injected into every writer's prompt
 - Never spawn a writer before its outline agent is done and validated
 - Never spawn a publisher if `compositeScore < 65` after re-draft, or `blocksPublishing: true` is unresolved, or unresolved `factFlags ≥ 0.7` without user approval
 - Always spawn all four QA agents (section-reviewer, editor, SEO, brand-checker) in the same response — never run them sequentially
@@ -824,8 +959,10 @@ Report the following (concisely — detail lives in the files):
 - In dual mode, a failed branch does not block the other branch — report the failure and continue
 - The alternative format (Step 9) skips the editorial loop — it is derivative content, not primary content
 - MAX_REVISIONS = 2, MAX_REDRAFTS = 1 — never exceed these per branch
-- Only append voice examples via the voice-curator pattern — never write to .claude/skills/gulcan-voice.skill directly without curator approval
+- Only append voice examples via the voice-curator pattern — never write to {brandPath}/voice.skill directly without curator approval
 - Never update voice examples for a branch that was re-drafted (had compositeScore < 65 at any point)
 - Keep your own messages to the user concise — detail lives in the files
 - If any subagent fails, report the error clearly and do not proceed to the next stage for that branch
 - Write run-config.json before spawning any agents — this is mandatory for recoverability
+- When `[SEO_BRIEF]` is active, always pass `files/seo/selected-brief.json` inline to the outline agent and SEO QA agent — never just the file path
+- When `[SEO_BRIEF]` is active in discovery mode, do not write run-config.json or proceed past Step 0 until the user has selected a keyword

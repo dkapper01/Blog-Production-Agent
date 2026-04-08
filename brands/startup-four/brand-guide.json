@@ -1,0 +1,62 @@
+{
+  "companyName": "TalkParty",
+  "websiteUrl": "https://www.talkparty.app",
+  "businessDescription": "AI-powered corporate English training platform — 24/7 conversational AI practice, real-time HR analytics, and industry-specific modules that reduce training costs by 80% and accelerate fluency 40% faster than traditional classroom methods. 70,000+ active learners across global teams.",
+  "voice": "Outcomes-first and data-backed — makes the business case for AI language training with specifics, then shows how real fluency (not just certification) changes what teams can actually do.",
+  "tone": ["direct", "data-driven", "practical", "confident", "results-oriented"],
+  "targetAudience": "HR managers and L&D leaders at global companies whose teams work across languages — dealing with the real cost of language gaps in meetings, presentations, client calls, and cross-functional collaboration. They want measurable outcomes and easy rollout, not another course nobody finishes.",
+  "hardConstraints": [
+    {
+      "rule": "Always cite sources inline with hyperlinks.",
+      "example": "According to [Grammarly's Business Communication Report](https://...)..."
+    },
+    {
+      "rule": "Never make up statistics — only use numbers that appear in the research notes.",
+      "example": "If no stat is found, write 'data unavailable' rather than estimating."
+    },
+    {
+      "rule": "Every post must have a clear thesis stated in the introduction.",
+      "example": "First paragraph ends with a specific, defensible claim the post will prove."
+    },
+    {
+      "rule": "Never position language training as 'fixing' employees — frame it as removing a barrier to performance.",
+      "example": "The problem isn't the employee's intelligence or effort. It's that a language gap silences capable people."
+    }
+  ],
+  "softPreferences": [
+    {
+      "preference": "Lead with the business cost of the language gap — not the solution.",
+      "example": "Open with: what actually goes wrong when teams can't communicate confidently in English? Lost deals, slower decisions, ideas that never get voiced."
+    },
+    {
+      "preference": "Use the measurement frame — 'you can't manage training you can't measure' is their own tagline.",
+      "example": "Connect L&D investment to trackable outcomes: speaking time, fluency progression, usage frequency."
+    },
+    {
+      "preference": "Acknowledge that most corporate language training fails — then explain why TalkParty's model is different.",
+      "example": "10 minutes a day beats 1 hour a week that no one actually does. Micro-learning that fits into real work schedules."
+    },
+    {
+      "preference": "Keep paragraphs short — HR leaders scan content between meetings.",
+      "example": "Under 5 sentences. Use data points as standalone pull moments, not buried in long paragraphs."
+    }
+  ],
+  "avoidTopics": [
+    "partisan political commentary",
+    "investment advice",
+    "medical diagnoses",
+    "content that implies non-native English speakers are less capable or intelligent",
+    "overpromising fluency timelines without evidence"
+  ],
+  "preferredWordCount": {
+    "min": 1000,
+    "max": 2000
+  },
+  "primaryLanguage": "en",
+  "secondaryLanguage": "tr",
+  "seoContext": {
+    "primaryMarket": "Global B2B (English-speaking HR/L&D buyers)",
+    "keyTopicAreas": ["corporate English training", "AI language learning", "workplace communication", "L&D ROI", "employee upskilling", "business English", "language training platform", "HR analytics"],
+    "competitorTypes": ["traditional corporate language training providers", "e-learning platforms with language courses", "1-on-1 online tutoring platforms", "other AI language apps"]
+  }
+}

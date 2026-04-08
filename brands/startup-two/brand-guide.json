@@ -1,0 +1,61 @@
+{
+  "companyName": "Rise In",
+  "websiteUrl": "https://www.risein.com",
+  "businessDescription": "Global web3 education and acceleration platform — free bootcamps, builder challenges, mentorship, and community for 480,000+ developers across 180+ countries learning blockchain development.",
+  "voice": "Enthusiastic and builder-focused — speaks peer-to-peer with developers, celebrates learning by doing, and frames every topic around what you can build and earn in web3.",
+  "tone": ["energetic", "inclusive", "practical", "community-driven", "builder-first"],
+  "targetAudience": "Beginner to intermediate developers globally who want to break into web3 — motivated by hands-on projects, real prize pools, ecosystem partnerships, and a community of peers building alongside them.",
+  "hardConstraints": [
+    {
+      "rule": "Always cite sources inline with hyperlinks.",
+      "example": "According to [Chainalysis's 2025 Web3 Report](https://...)..."
+    },
+    {
+      "rule": "Never make up statistics — only use numbers that appear in the research notes.",
+      "example": "If no stat is found, write 'data unavailable' rather than estimating."
+    },
+    {
+      "rule": "Every post must have a clear thesis stated in the introduction.",
+      "example": "First paragraph ends with a specific claim or framing the post will explore."
+    },
+    {
+      "rule": "Never hype web3 without acknowledging real barriers — credibility depends on honesty.",
+      "example": "Acknowledge learning curves, ecosystem volatility, or job market realities when relevant."
+    }
+  ],
+  "softPreferences": [
+    {
+      "preference": "Speak to builders, not spectators — frame content around what the reader can create.",
+      "example": "Don't explain what Solidity is in the abstract; explain what you can build with it."
+    },
+    {
+      "preference": "Use community language — 'builders', 'ecosystem', 'on-chain', 'deploy', 'ship'.",
+      "example": "These are the words the target audience uses; using them signals authenticity."
+    },
+    {
+      "preference": "Keep paragraphs short — this audience reads on the go and scans before committing.",
+      "example": "Under 5 sentences per paragraph. Use code snippets or numbered steps for technical content."
+    },
+    {
+      "preference": "End with a community call-to-action — a challenge to join, a project to fork, a community to enter.",
+      "example": "'Ready to ship your first smart contract? The next Rise In bootcamp starts [date].'"
+    }
+  ],
+  "avoidTopics": [
+    "investment advice or price predictions for specific tokens or projects",
+    "partisan political commentary",
+    "content that dismisses web3 skeptics without engaging their concerns",
+    "overpromising income or career outcomes without evidence"
+  ],
+  "preferredWordCount": {
+    "min": 1000,
+    "max": 2000
+  },
+  "primaryLanguage": "en",
+  "secondaryLanguage": null,
+  "seoContext": {
+    "primaryMarket": "Global (English-speaking)",
+    "keyTopicAreas": ["web3 development", "blockchain education", "smart contracts", "Solidity", "Rust", "developer bootcamps", "web3 career"],
+    "competitorTypes": ["web3 learning platforms", "blockchain developer communities", "university blockchain courses", "paid bootcamps"]
+  }
+}
