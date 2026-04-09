@@ -13,6 +13,8 @@
    - [4a. Write about a URL or article](#4a-write-about-a-url-or-article)
    - [4b. Write in Turkish or both languages](#4b-write-in-turkish-or-both-languages)
    - [4c. Use SEO keyword research](#4c-use-seo-keyword-research)
+   - [4d. Plan a 90-day content calendar](#4d-plan-a-90-day-content-calendar)
+   - [4e. Write from your notes](#4e-write-from-your-notes)
 5. [What happens while the agent runs](#5-what-happens-while-the-agent-runs)
 6. [Your output files — what you get](#6-your-output-files--what-you-get)
 7. [Reviewing and rating a post](#7-reviewing-and-rating-a-post)
@@ -100,6 +102,8 @@ Write a post about burnout prevention [PAUSE_AFTER_OUTLINE]
 | Review outline before writing | Add `[PAUSE_AFTER_OUTLINE]` to your request | Off |
 | Skip the alternative format | Add `[SKIP_ALT_FORMAT]` to your request | Off |
 | Include SEO research | Add `[SEO_BRIEF]` to your request | Off |
+| Plan a content calendar | Add `[CONTENT_CALENDAR]` to your request | Off |
+| Write from raw notes | Put `[FROM_NOTES]` on the first line, paste notes below | Off |
 
 ---
 
@@ -160,10 +164,118 @@ Find keyword opportunities for my business [SEO_BRIEF]
 The agent will present a ranked list of keyword opportunities and ask you to pick one before writing.
 
 **Enrichment mode** — research keywords for a specific topic you already have:
+
 ```
 Write a post about AI hiring tools [SEO_BRIEF]
 ```
+
 The agent runs keyword research scoped to your topic, then proceeds automatically.
+
+---
+
+### 4d. Plan a 90-day content calendar
+
+Instead of writing one post, the agent can plan your entire next quarter — finding the best topics, sequencing them strategically, and saving everything so you can write posts one at a time whenever you're ready.
+
+```
+Create a 90-day content calendar [CONTENT_CALENDAR]
+Plan my next quarter of content [CONTENT_CALENDAR]
+```
+
+The agent will search for 25 potential topics across your brand's subject areas, then select and sequence the best 12 into a publishing plan. Each post in the plan gets:
+
+- A suggested publish date (one per week)
+- A specific keyword to target and why it's a good opportunity
+- A format recommendation (explainer, listicle, how-to, etc.)
+- The funnel stage it addresses (awareness, consideration, or decision)
+- A note on what existing competitor content is missing — your opening
+
+The agent also identifies **topic clusters**: a pillar post paired with 2–3 supporting posts that interlink. This is the most effective way to build authority on a subject over time.
+
+After the plan is ready, you'll see a table like this:
+
+```
+─────────────────────────────────────────────
+  90-DAY CONTENT CALENDAR — Patika.dev
+  Apr 15 – Jul 14, 2026  |  12 posts  |  2 topic clusters
+─────────────────────────────────────────────
+  #   Date      Title                              Format      Difficulty  Cluster
+  1   Apr 15    [title]                            Explainer   Easy        Pillar: AI Literacy
+  2   Apr 22    [title]                            Listicle    Easy        Standalone
+  3   Apr 29    [title]                            How-to      Medium      Supports #1
+  ...
+─────────────────────────────────────────────
+```
+
+**To write a post from the calendar**, just say which number you want:
+
+```
+write post 1
+write posts 1-3
+```
+
+The agent fills in the topic, keyword, format, and language automatically — you don't have to re-specify anything. After each post publishes, the calendar is updated to show it as complete.
+
+**Batch limit:** You can write up to 3 posts in one session. After the third, the agent will pause and ask if you want to continue.
+
+The calendar is saved to `files/calendar/{brand-slug}-calendar.json` and persists between sessions. You can come back to it any time.
+
+---
+
+### 4e. Write from your notes
+
+This is the fastest way to start a post. Instead of describing a topic, you paste whatever you already have — raw thoughts, a voice memo transcript, a brain dump, a LinkedIn comment you wrote — and the agent extracts the post from your own words.
+
+Put `[FROM_NOTES]` on the first line, then paste your notes below:
+
+```
+[FROM_NOTES]
+I've been thinking about how most companies approach AI hiring backwards.
+They run assessments after interviews — which means 3 hours of everyone's time
+before they know if basic criteria are met. We made this mistake at my last company.
+Cost us two months of wasted pipeline. There has to be a better sequencing.
+```
+
+The agent will read your notes, extract what it finds, and show you a summary before doing anything:
+
+```
+─────────────────────────────────────────────
+  NOTES PARSED
+─────────────────────────────────────────────
+  TOPIC:   AI assessment sequencing in hiring pipelines
+  THESIS:  Most companies run AI assessments too late in the hiring process,
+           wasting interviewer time on candidates who would have been screened
+           out earlier.
+
+  KEY POINTS:
+  1. Assessment after interview wastes 3+ hours per candidate
+  2. Pre-interview screening changes the economics of the pipeline
+  3. First-hand experience at previous company as supporting case
+
+  FORMAT:  opinion  |  LANGUAGE: en
+
+  PERSONAL MATERIAL FOUND: 1 item — will be preserved in the post
+  FACTS TO VERIFY: 1 item — researchers will corroborate
+
+  Continue with these? [Y] Yes  [E] Edit topic/thesis  [N] Cancel
+─────────────────────────────────────────────
+```
+
+Reply **Y** to proceed, **E** to adjust the topic or thesis, or **N** to cancel.
+
+Once you confirm, the pipeline runs exactly as normal — research, outline, writing, QA. The difference is that your notes become the anchor research file. Your personal stories and specific phrases are flagged as mandatory content that the writer must include. The research agents focus on corroborating and deepening what you already know, not replacing it.
+
+The result is a post that starts from your thinking, in your voice, with your experience at its centre — supplemented with verified facts and sources.
+
+**What works well as notes:**
+
+- A few paragraphs of free writing about something you observed or experienced
+- A voice memo transcript (paste the text)
+- A LinkedIn comment thread where you made a substantive point
+- An email you wrote to a client or colleague explaining something
+- Even bullet points — "I want to cover: X, Y, Z"
+
+The notes don't need to be polished. The messier and more specific they are, the better the output.
 
 ---
 
@@ -222,6 +334,10 @@ files/output/
 ```
 
 For dual-language runs, Turkish files get a `-tr` suffix.
+
+### Content calendar (`files/calendar/`)
+
+If you generated a content calendar, it lives at `files/calendar/{brand-slug}-calendar.json`. This file is updated in place as you write posts from it — completed posts are marked with their output path and QA score. You can come back to it in any future session and pick up where you left off.
 
 ### The blog post (`.md`)
 A Markdown file ready to paste into your CMS (WordPress, Webflow, Ghost, Substack, etc.). Contains front matter metadata, the full post body, and a numbered reference list at the bottom.

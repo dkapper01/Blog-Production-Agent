@@ -18,6 +18,20 @@ Find keyword opportunities for AI productivity tools [SEO_BRIEF]
 Write a post about remote work tools [SEO_BRIEF]
 Write a post about https://example.com/some-article
 Can you write about this? https://example.com/some-article
+[FROM_NOTES]
+I've been thinking about how most companies use AI for hiring wrong. They run the
+assessment after the interview instead of before, which means they've already spent
+3 hours on a candidate before they know if the basics are there. We did this at my
+last company and it cost us months. Let me write about this.
+```
+
+## How to run a content calendar
+
+```
+Create a 90-day content calendar [CONTENT_CALENDAR]
+Plan my next quarter of content [CONTENT_CALENDAR]
+write post 3                          (after a calendar exists for the brand)
+write posts 1-3                       (batch — writes up to 3 posts sequentially)
 ```
 
 ## Intake parameters
@@ -34,6 +48,8 @@ Can you write about this? https://example.com/some-article
 | **Pause for review** | `[PAUSE_AFTER_OUTLINE]` anywhere in request | Off |
 | **Skip alt format** | `[SKIP_ALT_FORMAT]` anywhere in request | Off |
 | **SEO brief** | `[SEO_BRIEF]` anywhere in request | Off |
+| **Content calendar** | `[CONTENT_CALENDAR]` anywhere in request | Off |
+| **Write from notes** | `[FROM_NOTES]` on first line, raw notes as message body | Off |
 | **Source URL** | Paste any `https://` URL anywhere in the request | None — agent asks intent if detected |
 
 ---
@@ -68,26 +84,13 @@ Can you write about this? https://example.com/some-article
 | Alt-format draft | `files/drafts/draft-{format}.md` |
 | SEO keyword opportunities | `files/seo/keyword-opportunities.json` |
 | SEO content brief | `files/seo/selected-brief.json` |
+| Content calendar | `files/calendar/{brand-slug}-calendar.json` |
 
 ### Dual-language runs
 
-| Artifact | EN path | TR path |
-|----------|---------|---------|
-| Outline | `files/drafts/outline-en.json` | `files/drafts/outline-tr.json` |
-| Draft | `files/drafts/draft-en.md` | `files/drafts/draft-tr.md` |
-| Draft metadata | `files/drafts/draft-meta-en.json` | `files/drafts/draft-meta-tr.json` |
-| Citations | `files/drafts/citations-en.json` | `files/drafts/citations-tr.json` |
-| Section review | `files/drafts/section-review-en.json` | `files/drafts/section-review-tr.json` |
-| Editorial report | `files/drafts/editorial-report-en.json` | `files/drafts/editorial-report-tr.json` |
-| SEO analysis | `files/drafts/seo-analysis-en.json` | `files/drafts/seo-analysis-tr.json` |
-| Brand report | `files/drafts/brand-report-en.json` | `files/drafts/brand-report-tr.json` |
+Dual-language paths append `-en` or `-tr` before the file extension: `draft.md` → `draft-en.md` / `draft-tr.md`, `outline.json` → `outline-en.json` / `outline-tr.json`, and so on for all draft artifacts.
 
-Output paths:
-
-- EN primary: `files/output/{date}-{slug}.md`
-- TR primary: `files/output/{date}-{slug}-tr.md`
-- EN alternative: `files/output/{date}-{slug}-{format}.md`
-- TR alternative: `files/output/{date}-{slug}-tr-{format}.md`
+Output paths: `files/output/{date}-{slug}.md` (EN), `files/output/{date}-{slug}-tr.md` (TR). Alternative formats append `-{format}` before the language suffix.
 
 ---
 
@@ -111,16 +114,172 @@ Read `brands/index.json` to get the brand list. Display:
 ─────────────────────────────────────────────
 ```
 
-Wait for the user's reply. Set `activeBrand` to the selected slug and `brandPath` to `brands/{activeBrand}`. All subsequent file references use `{brandPath}` instead of `memory/`:
+Wait for the user's reply. Set `activeBrand` to the selected slug and `brandPath` to `brands/{activeBrand}`. All brand files are at `{brandPath}/` (brand-guide.json, audience-model.json, content-library.json, voice.skill). The `files/` directory is shared across brands.
 
-| Old path | New path |
-|---|---|
-| `{brandPath}/brand-guide.json` | `{brandPath}/brand-guide.json` |
-| `{brandPath}/audience-model.json` | `{brandPath}/audience-model.json` |
-| `{brandPath}/content-library.json` | `{brandPath}/content-library.json` |
-| `{brandPath}/voice.skill` | `{brandPath}/voice.skill` |
+---
 
-The `files/` directory (research, drafts, output, seo) is shared across brands — no change to those paths.
+### Calendar Mode (triggered by `[CONTENT_CALENDAR]`)
+
+**If `[CONTENT_CALENDAR]` appears anywhere in the user's request, run this mode instead of the normal pipeline. Do not proceed to Step 0.**
+
+After brand selection, load the brand guide in parallel with starting the calendar:
+
+Read `{brandPath}/brand-guide.json` and `{brandPath}/audience-model.json` — you need both inline for the subagents.
+
+**Spawn two subagents sequentially** — the strategist depends on the researcher's output.
+
+**Spawn `calendar-researcher`.** Pass:
+- `{brandPath}/brand-guide.json` content inline
+- `{brandPath}/content-library.json` content inline (or "empty" if `[]`)
+- Brand slug
+
+After it completes, read `files/calendar/research-pool.json`.
+
+**Spawn `calendar-strategist`.** Pass:
+- Full content of `files/calendar/research-pool.json` inline
+- `{brandPath}/brand-guide.json` content inline
+- `{brandPath}/audience-model.json` content inline
+- Calendar start date: today + 7 days (YYYY-MM-DD)
+- Output path: `files/calendar/{brand-slug}-calendar.json`
+
+---
+
+#### After both subagents complete
+
+Read `files/calendar/{brand-slug}-calendar.json` and present the calendar to the user:
+
+```
+─────────────────────────────────────────────
+  90-DAY CONTENT CALENDAR — {brandName}
+  {start date} – {end date}  |  12 posts  |  {N} topic clusters
+─────────────────────────────────────────────
+  #   Date      Title                              Format      Difficulty  Cluster
+  1   Apr 15    [title]                            Explainer   Easy        Pillar: [cluster name]
+  2   Apr 22    [title]                            Listicle    Easy        Standalone
+  3   Apr 29    [title]                            How-to      Medium      Supports #1
+  ...
+─────────────────────────────────────────────
+  FUNNEL:    {awareness} awareness · {consideration} consideration · {decision} decision
+  CLUSTERS:  {N} identified
+  LANGUAGES: {tr count} Turkish · {en count} English
+─────────────────────────────────────────────
+  Say "write post 1" to start, or "write posts 1–3" to batch.
+─────────────────────────────────────────────
+```
+
+Stop here. Do not proceed to Step 0 or the normal pipeline.
+
+---
+
+### Write Post From Calendar (triggered by "write post N" or "write posts N–M")
+
+**Detect this pattern** in the user's message: "write post {N}" or "write posts {N}–{M}" or "write posts {N}-{M}".
+
+If detected:
+
+1. After brand selection, read `files/calendar/{brand-slug}-calendar.json`.
+2. If the file does not exist, tell the user: "No calendar found for this brand. Run `[CONTENT_CALENDAR]` first to generate one."
+3. Look up the post(s) at the requested position(s). If a position is already `"status": "published"`, skip it and notify the user.
+4. For a single post: pre-fill intake from the calendar entry and proceed to Step 1 with these values already set — do not ask the user for them:
+   - `topic` ← calendar post's `topic`
+   - `primaryKeyword` ← calendar post's `primaryKeyword`; add to `keywords[]`
+   - `secondaryKeywords` ← calendar post's `secondaryKeywords`; add to `keywords[]`
+   - `format` ← calendar post's `format`
+   - `languages` ← `[calendar post's language]`
+   - `wordCountTarget` ← derive from `estimatedWordCount`: ≤1200 → "short", 1200–2000 → "standard", >2000 → "long"
+5. For a range "write posts N–M": run each post sequentially, one at a time, waiting for each to complete before starting the next. Announce before each: "Writing post {position}: {title}..."
+6. After each post publishes successfully, update the calendar file:
+   - Set `"status": "published"`
+   - Set `"publishedAt"` to the current ISO datetime
+   - Set `"outputPath"` to the published file path
+   - Set `"compositeScore"` to the compositeQAScore from the run
+
+**Batch limit:** Never write more than 3 posts in a single "write posts" command. If the user requests more than 3, write the first 3, then ask: "Posts {N}–{N+2} complete. Continue with posts {N+3}–{M}?"
+
+---
+
+### Notes Mode (triggered by `[FROM_NOTES]`)
+
+**If the user's message starts with `[FROM_NOTES]`, run this mode instead of the normal intake.** The remainder of the message — everything after `[FROM_NOTES]` — is the raw notes. Do not treat the notes as a topic statement; treat them as unstructured source material.
+
+Raw notes can be any of:
+- A voice memo transcript pasted in
+- A brain dump or bullet list
+- A LinkedIn post or comment thread
+- An email or message the user wrote
+- A stream-of-consciousness writeup
+
+After brand selection, load the brand guide (`{brandPath}/brand-guide.json`) — you need it for the notes-parser.
+
+**Spawn one `notes-parser` subagent.** Pass it:
+- The raw notes verbatim
+- The full brand guide JSON (inline)
+- Output path: `files/drafts/notes-parse.json`
+
+After the agent completes, read `files/drafts/notes-parse.json` and present the extraction to the user:
+
+```
+─────────────────────────────────────────────
+  NOTES PARSED
+─────────────────────────────────────────────
+  TOPIC:   {topic}
+  THESIS:  {thesis}  {(inferred) if thesisInferred}
+
+  KEY POINTS:
+  1. {keyPoints[0]}
+  2. {keyPoints[1]}
+  3. {keyPoints[2]}
+
+  FORMAT:  {suggestedFormat}  |  LANGUAGE: {suggestedLanguage}
+
+  PERSONAL MATERIAL FOUND: {count} item(s) — will be preserved in the post
+  FACTS TO VERIFY: {specificFacts.length} item(s) — researchers will corroborate
+
+  Continue with these? [Y] Yes  [E] Edit topic/thesis  [N] Cancel
+─────────────────────────────────────────────
+```
+
+Wait for the user's reply:
+
+- **Y** — pre-fill intake from the parsed output and continue
+- **E** — ask what to change, update the relevant fields, re-present the summary
+- **N** — stop
+
+**Pre-filling intake from the parsed output:**
+
+- `topic` ← `notes-parse.topic`
+- `format` ← `notes-parse.suggestedFormat`
+- `languages` ← `[notes-parse.suggestedLanguage]`
+- `wordCountTarget` ← `"standard"` (default; user can override)
+- `keywords` ← `[]` (researchers will determine; the notes may not contain keyword intent)
+- Write RunConfig with these values, then continue to Step 1 (skip URL detection)
+
+**Pre-loading notes as research context:**
+
+Before spawning researchers in Step 3, write the parsed notes to `files/research/notes.json` in the standard research file format:
+
+```json
+{
+  "slug": "notes",
+  "subtopic": "Author's raw notes and personal material",
+  "summary": "{notes-parse.thesis}",
+  "keyFindings": [
+    { "claim": "{keyPoint}", "source": "Author's notes", "confidence": 0.85 }
+  ],
+  "targetFacts": ["{quotablePhrases from notes-parse}"],
+  "usefulQuotes": [],
+  "dataGaps": ["{specificFacts that need verification}"],
+  "sources": ["Author's notes"]
+}
+```
+
+Map `keyPoints` to `keyFindings` (confidence 0.85 — author knowledge, not primary research). Map `quotablePhrases` to `targetFacts` — the writer must use these verbatim or near-verbatim. Map `specificFacts` that need verification to `dataGaps` so researchers know to look for corroboration.
+
+Add `"notes"` to the research slugs list passed to all downstream agents. Include this instruction in every researcher's task prompt when notes are present:
+
+> "The author has provided their own notes at files/research/notes.json. Read it first. Your job is to corroborate, deepen, and supplement what the author already knows — not to replace it. Pay special attention to the `dataGaps` field, which lists facts from the notes that need source verification."
+
+The outline and writer agents will treat `files/research/notes.json` as a peer research file. The `targetFacts` (author's quotable phrases) carry the same weight as any other research targetFact — the writer must include them.
 
 ---
 
@@ -243,40 +402,12 @@ Pass the full content of `{brandPath}/voice.skill` inline whenever a prompt says
 Spawn one `researcher` subagent per subtopic using the Task tool. All Task calls in one response (parallel).
 
 Each researcher's task prompt must include:
-
-```
-ROLE: You are a researcher for a blog production pipeline.
-
-TASK: Research this subtopic: "{subtopic}"
-This will be used in a post about: "{topic}"
-
-OUTPUT FILE: files/research/{slug}.json
-
-OUTPUT FORMAT — write valid JSON matching this structure:
-{
-  "slug": "{slug}",
-  "subtopic": "{subtopic}",
-  "summary": "1–3 sentence overview of your findings",
-  "keyFindings": [
-    { "claim": "...", "source": "...", "confidence": 0.0–1.0 }
-  ],
-  "targetFacts": ["verbatim sentences the post should use"],
-  "usefulQuotes": [{ "text": "...", "attribution": "..." }],
-  "dataGaps": ["things you could not find reliable data on"],
-  "sources": ["list of sources consulted"]
-}
-
-CONFIDENCE SCALE: 0.9+ = primary source. 0.7–0.9 = credible secondary. 0.5–0.7 = community or uncertain.
-
-RULES:
-- Minimum 5 keyFindings required
-- Never fabricate statistics — mark unavailable data as a dataGap
-- Prefer specific numbers and named sources over vague claims
-- Drop any finding with confidence below 0.5
-
-PRIOR COVERAGE (avoid repeating these angles):
-{priorCoverageList}
-```
+- Subtopic to research
+- Parent topic (context)
+- Output slug and file path: `files/research/{slug}.json`
+- Prior coverage list (avoid repeating these angles)
+- If `[FROM_NOTES]` run: "Read files/research/notes.json first. Corroborate and deepen what the author already knows — do not replace it. Pay special attention to dataGaps."
+- If `sourceUrl` set: "Treat files/research/source-article.json as a peer file — supplement it, do not replace it."
 
 **Source article pre-load (if `sourceUrl` is set):** Before spawning researchers, write the fetched article content to `files/research/source-article.json` in the standard research file format:
 
@@ -383,86 +514,18 @@ After both complete, run validation on each independently.
 
 After outline agent(s) complete:
 
-**Single-language run:** Spawn one `writer` subagent with the following task prompt:
+**Single-language run:** Spawn one `writer` subagent. Pass:
+- Topic, format, language
+- Outline path
+- Draft path, metadata path, citations path
+- `masterFactList` as inline JSON
+- `resolvedConflicts` as inline JSON
+- Research slugs list
+- Word count range (`{min}`–`{max}`)
+- `{brandPath}/brand-guide.json` content inline
+- `{brandPath}/voice.skill` content inline
 
-```
-ROLE: You are a writer producing blog content in Gülcan Yayla's voice.
-You write FOR her — not about her. Every word must sound like she wrote it.
-
-BRAND GUIDE:
-{full brand-guide.json pasted inline}
-
-VOICE GUIDE:
-{voiceGuideText — full content of {brandPath}/voice.skill}
-
-TASK: Write a {format} blog post in {language} on this topic:
-"{topic}"
-
-OUTLINE: Read the full outline at {outlinePath} and follow it section by section.
-Do not add sections not in the outline. Do not exceed each section's estimatedWordCount by more than 15%.
-
-MASTER FACTS (you MUST incorporate all of these):
-{masterFactList as inline JSON}
-
-KNOWN DATA CONFLICTS (use the resolved value listed here):
-{resolvedConflicts as inline JSON}
-
-RESEARCH FILES (read these for detail, quotes, and supporting data):
-{researchSlugs list}
-
-WORD COUNT: Target {min}–{max} words total. Stay within ±15% of each section's estimatedWordCount.
-
-OUTPUT FILES — write all three:
-1. {draftPath} — prose draft
-2. {draftMetaPath} — metadata JSON (see format below)
-3. {citationsPath} — citations JSON (see format below)
-
-CITATION RULE (non-negotiable):
-Every factual claim must include an inline citation placeholder in this exact format:
-  [SOURCE: {source description from research}]
-Do not leave any statistic, named claim, or research finding uncited.
-These placeholders will be resolved to live URLs by the publisher.
-
-DRAFT METADATA FORMAT:
-{
-  "title": "...",
-  "slug": "...",
-  "topic": "...",
-  "format": "...",
-  "language": "...",
-  "wordCount": 0,
-  "thesis": "...",
-  "targetKeywords": [...],
-  "primaryKeyword": "...",
-  "targetAudience": "...",
-  "citationCount": 0,
-  "sectionWordCounts": { "Section Heading": wordCount },
-  "createdAt": "ISO datetime"
-}
-
-CITATIONS FORMAT:
-{
-  "citations": [
-    {
-      "id": "cite-001",
-      "claim": "verbatim claim from draft",
-      "sourceDescription": "source description from research",
-      "confidence": 0.95
-    }
-  ]
-}
-
-VOICE RULES (non-negotiable):
-- Open with a personal anecdote or specific concrete moment — never a rhetorical question opener or generic statement
-- Include "Let me explain how." as a standalone sentence at least once
-- Paragraphs must be under 5 sentences
-- Active voice throughout
-- End with an actionable takeaway or forward-looking implication
-- No corporate buzzwords ("leverage synergies", "thought leader", "disruptive innovation")
-- Never open a paragraph with "In conclusion", "To summarize", or "In today's fast-paced"
-```
-
-**Turkish writer additions** (append to writer prompt for TR):
+**Turkish writer additions** — append to the task prompt for TR runs:
 
 ```
 TURKISH LANGUAGE MODE — write natively in Turkish, do NOT translate from English:
@@ -493,176 +556,23 @@ After all writer(s) complete, spawn **four agents per language branch** in the s
 
 **Dual-language run:** Eight agents in one response (four per language).
 
-#### Agent 1: Section Reviewer
+#### Agent 1: `section-reviewer`
 
-Task prompt:
+Pass: draft path, output path (`{sectionReviewPath}`), language.
 
-```
-ROLE: You are a section-level editorial reviewer.
+#### Agent 2: `editor`
 
-TASK: Read the draft at {draftPath}. Review each section independently.
+Pass: draft path, metadata path, output path (`{editorialReportPath}`).
 
-For each section, score (0–100):
-- VOICE SCORE: Does this section sound like a specific human voice?
-  Penalize: generic phrases, passive voice, corporate buzzwords, bullet lists without narrative.
-- ARGUMENT SCORE: Is the argument clear and supported within this section?
-  Penalize: unsupported claims, circular reasoning, non-sequiturs between sentences.
-- FACT DENSITY SCORE: Does this section use specific data, names, numbers?
-  Penalize: vague claims ("many companies", "some studies"), opinion stated as fact without signal.
+#### Agent 3: `seo`
 
-Compute sectionPassScore = average of the three scores for each section.
+Pass: draft path, metadata path, target keywords, output path (`{seoAnalysisPath}`).
 
-OUTPUT FILE: {sectionReviewPath}
-OUTPUT FORMAT:
-{
-  "language": "...",
-  "sections": [
-    {
-      "heading": "...",
-      "sectionIndex": 0,
-      "voiceScore": 0-100,
-      "argumentScore": 0-100,
-      "factDensityScore": 0-100,
-      "sectionPassScore": 0-100,
-      "issues": [
-        {
-          "type": "voice | argument | fact | citation",
-          "severity": "hard | soft",
-          "description": "...",
-          "suggestedFix": "..."
-        }
-      ]
-    }
-  ],
-  "lowestSectionScore": 0-100,
-  "averageSectionScore": 0-100
-}
+If `seoBrief: true`: also pass `files/seo/selected-brief.json` content inline with instruction: "Evaluate keyword coverage against this brief's `targetKeyword`, `secondaryKeywords`, and `geoOptimization.conversationalQueryVariants`. Score GEO readiness using the brief's `geoOptimization` criteria as your benchmark."
 
-ISOLATION RULE: Read ONLY {draftPath}. Do not read brand guide, outline, research, or any other file.
-Score only what is on the page.
-```
+#### Agent 4: `brand-checker`
 
-#### Agent 2: Editor (global pass)
-
-Task prompt:
-
-```
-ROLE: You are a global editorial reviewer. You evaluate the full draft for cross-section
-coherence. Do NOT evaluate voice compliance or SEO — those are separate agents.
-
-TASK: Read {draftPath} and {draftMetaPath}. Evaluate the post as a complete reading experience.
-
-SCORE (0–100):
-- VOICE SCORE: Does the voice stay consistent from opening to conclusion?
-- STRUCTURE SCORE: Is the narrative arc complete? Introduction → development → resolution?
-- CITATION SCORE: Are factual claims cited with [SOURCE: ...] placeholders? Uncited claims = penalize.
-- NARRATIVE ARC SCORE: Does each section follow logically from the previous?
-- TONE CONSISTENCY SCORE: Does the tone drift mid-post?
-
-Compute passScore = (voiceScore×0.25) + (structureScore×0.25) + (citationScore×0.25) + (narrativeArcScore×0.15) + (toneConsistencyScore×0.10)
-
-CITATION HARD CONSTRAINT: If the draft contains factual claims without [SOURCE: ...] placeholders,
-set citationScore proportionally low and add a revisionPriority item with severity: "hard_constraint".
-
-OUTPUT FILE: {editorialReportPath}
-OUTPUT FORMAT:
-{
-  "passScore": 0-100,
-  "language": "...",
-  "overallAssessment": "...",
-  "voiceScore": 0-100,
-  "structureScore": 0-100,
-  "citationScore": 0-100,
-  "narrativeArcScore": 0-100,
-  "toneConsistencyScore": 0-100,
-  "revisionPriority": [
-    {
-      "priority": 1,
-      "issue": "...",
-      "detail": "...",
-      "severity": "hard_constraint | major | minor",
-      "affectedSections": ["heading or 'all'"]
-    }
-  ],
-  "strengths": ["..."],
-  "factFlags": [
-    { "claim": "...", "confidence": 0.0-1.0, "reason": "..." }
-  ],
-  "requiresRevision": true,
-  "publishBlocker": "string or null"
-}
-
-ISOLATION RULE: Read ONLY {draftPath} and {draftMetaPath}. No other files.
-```
-
-#### Agent 3: SEO Agent
-
-Same inputs and output format as current system — draft path, draft-meta path, and target keywords. Output to `{seoAnalysisPath}`.
-
-If `seoBrief: true` in RunConfig, also pass the content of `files/seo/selected-brief.json` inline with instruction: "Evaluate keyword coverage against this brief's `targetKeyword`, `secondaryKeywords`, and `geoOptimization.conversationalQueryVariants`. Score GEO readiness using the brief's `geoOptimization` criteria as your benchmark."
-
-#### Agent 4: Brand Checker
-
-Task prompt:
-
-```
-ROLE: You are a brand compliance checker. You verify that the draft adheres to the brand
-guide's hard constraints and voice preferences.
-
-BRAND GUIDE (pasted inline):
-{full brand-guide.json}
-
-VOICE GUIDE (pasted inline):
-{voiceGuideText — full content of {brandPath}/voice.skill}
-
-TASK: Read the draft at {draftPath}.
-
-HARD CONSTRAINTS EVALUATION — for EACH rule in brandGuide.hardConstraints, evaluate:
-{
-  "rule": "exact rule text",
-  "status": "PASSED | VIOLATED",
-  "evidence": "specific quote or observation from the draft",
-  "blocksPublishing": true/false
-}
-
-CRITICAL RULE: If ANY hardConstraints entry has status "VIOLATED", you MUST set the top-level
-"blocksPublishing" field to true. A soft advisory does NOT override this. Do not set
-blocksPublishing: false when any hard constraint is violated — this is the most important
-rule in this prompt.
-
-Also evaluate:
-- voiceCompliance: check each voice marker from the voice guide
-- avoidTopicsCheck: confirm none of brandGuide.avoidTopics appear
-- softAdvisories: list any soft preferences that are unmet but do not block publishing
-
-OUTPUT FILE: {brandReportPath}
-OUTPUT FORMAT:
-{
-  "language": "...",
-  "hardConstraintsEvaluation": [...],
-  "blocksPublishing": true/false,
-  "hardViolations": ["..."],
-  "topicFlags": [],
-  "softAdvisories": [{ "advisory": "...", "severity": "soft" }],
-  "voiceCompliance": {
-    "personalHook": true/false,
-    "specificNamesAndNumbers": true/false,
-    "warmButProfessional": true/false,
-    "noBuzzwordSpeak": true/false,
-    "activeVoice": true/false,
-    "actionableConclusion": true/false
-  },
-  "avoidTopicsCheck": {
-    "partisanPolitics": false,
-    "investmentAdvice": false,
-    "medicalDiagnoses": false
-  },
-  "overallBrandScore": 0-100,
-  "notes": "..."
-}
-
-ISOLATION RULE: Read ONLY {draftPath}. Brand guide and voice guide are provided inline above.
-```
+Pass: draft path, output path (`{brandReportPath}`), `{brandPath}/brand-guide.json` content inline, `{brandPath}/voice.skill` content inline.
 
 ---
 
@@ -966,3 +876,12 @@ Report the following (concisely — detail lives in the files):
 - Write run-config.json before spawning any agents — this is mandatory for recoverability
 - When `[SEO_BRIEF]` is active, always pass `files/seo/selected-brief.json` inline to the outline agent and SEO QA agent — never just the file path
 - When `[SEO_BRIEF]` is active in discovery mode, do not write run-config.json or proceed past Step 0 until the user has selected a keyword
+- When `[CONTENT_CALENDAR]` is detected, skip Steps 0–11 entirely — run Calendar Mode instead and stop after presenting the table
+- Always run calendar-researcher before calendar-strategist — they are sequential, not parallel
+- When writing posts from a calendar, always update the calendar JSON with status/publishedAt/outputPath/compositeScore after each post publishes
+- Never write more than 3 posts in a single "write posts N–M" batch command
+- A calendar file is brand-scoped: `files/calendar/{brand-slug}-calendar.json`. If the user requests "write post N" for a brand with no calendar file, stop and ask them to generate one first
+- In Notes Mode, always present the parsed extraction and wait for user confirmation before writing RunConfig or spawning any agents
+- In Notes Mode, always write `files/research/notes.json` before spawning researchers — it is the anchor research file for the entire run
+- The `quotablePhrases` from the notes-parse output are mandatory targetFacts — the writer must use them; they are the author's own voice and must not be paraphrased away
+- Never use Notes Mode and `[CONTENT_CALENDAR]` in the same request — if both flags appear, ask the user which they intended
