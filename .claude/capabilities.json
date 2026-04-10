@@ -1,0 +1,28 @@
+[
+  {
+    "coordinator": "writing-coordinator",
+    "description": "End-to-end blog post production — research, outline, draft, QA, publish",
+    "triggers": [
+      "write a post",
+      "write post \\d+",
+      "write posts \\d",
+      "\\[FROM_NOTES\\]",
+      "\\[PAUSE_AFTER_OUTLINE\\]",
+      "\\[SKIP_ALT_FORMAT\\]"
+    ],
+    "flags": ["PAUSE_AFTER_OUTLINE", "SKIP_ALT_FORMAT", "SEO_BRIEF"]
+  },
+  {
+    "coordinator": "planning-coordinator",
+    "description": "Content calendar generation and SEO keyword discovery",
+    "triggers": [
+      "content calendar",
+      "\\[CONTENT_CALENDAR\\]",
+      "plan my",
+      "plan next",
+      "keyword opportunit",
+      "find keyword"
+    ],
+    "flags": ["CONTENT_CALENDAR", "SEO_BRIEF"]
+  }
+]

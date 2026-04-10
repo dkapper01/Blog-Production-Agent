@@ -1,32 +1,39 @@
-# Blog Production Agent — User Guide
+# Blog Production System — User Guide
 
-*A plain-language guide to creating research-backed blog posts using the Blog Production Agent.*
+*Everything you need to know to use the Blog Production System — from your first post to advanced workflows.*
 
 ---
 
 ## Table of Contents
 
-1. [What this tool does](#1-what-this-tool-does)
+1. [What this system does](#1-what-this-system-does)
 2. [How to start](#2-how-to-start)
 3. [Select your brand](#3-select-your-brand)
-4. [How to ask for a post](#4-how-to-ask-for-a-post)
-   - [4a. Write about a URL or article](#4a-write-about-a-url-or-article)
-   - [4b. Write in Turkish or both languages](#4b-write-in-turkish-or-both-languages)
-   - [4c. Use SEO keyword research](#4c-use-seo-keyword-research)
-   - [4d. Plan a 90-day content calendar](#4d-plan-a-90-day-content-calendar)
-   - [4e. Write from your notes](#4e-write-from-your-notes)
-5. [What happens while the agent runs](#5-what-happens-while-the-agent-runs)
-6. [Your output files — what you get](#6-your-output-files--what-you-get)
-7. [Reviewing and rating a post](#7-reviewing-and-rating-a-post)
-8. [Setting up a brand](#8-setting-up-a-brand)
-9. [Tips for best results](#9-tips-for-best-results)
-10. [Troubleshooting](#10-troubleshooting)
+4. [Writing a post](#4-writing-a-post)
+   - [4a. Basic request](#4a-basic-request)
+   - [4b. Write about a URL or article](#4b-write-about-a-url-or-article)
+   - [4c. Write in Turkish or both languages](#4c-write-in-turkish-or-both-languages)
+   - [4d. Write from your raw notes](#4d-write-from-your-raw-notes)
+   - [4e. SEO keyword enrichment](#4e-seo-keyword-enrichment)
+   - [4f. Review the outline before writing](#4f-review-the-outline-before-writing)
+5. [Content calendar](#5-content-calendar)
+   - [5a. Generate a 90-day calendar](#5a-generate-a-90-day-calendar)
+   - [5b. Write posts from the calendar](#5b-write-posts-from-the-calendar)
+   - [5c. SEO keyword discovery](#5c-seo-keyword-discovery)
+6. [What happens during a run](#6-what-happens-during-a-run)
+7. [Your output files](#7-your-output-files)
+8. [Reviewing and rating a post](#8-reviewing-and-rating-a-post)
+9. [How the system learns](#9-how-the-system-learns)
+10. [Setting up a brand](#10-setting-up-a-brand)
+11. [System architecture](#11-system-architecture)
+12. [Tips for best results](#12-tips-for-best-results)
+13. [Troubleshooting](#13-troubleshooting)
 
 ---
 
-## 1. What this tool does
+## 1. What this system does
 
-You describe what you want to write. The agent does the research, writing, and quality review — then delivers a ready-to-publish package.
+You describe what you want to write. The system does the research, writing, and quality review — then delivers a ready-to-publish package.
 
 Each run produces:
 
@@ -36,23 +43,23 @@ Each run produces:
 - An email newsletter teaser with subject line and preview text
 - Two headline and meta-description variants for A/B testing
 
-Every factual claim is cited. The agent also learns over time — each post updates its understanding of what performs best for your audience.
+Every factual claim is cited. The system also learns over time — each post updates the brand's voice profile and audience model so future posts improve automatically.
 
 ---
 
 ## 2. How to start
 
 1. Open **Claude Code** on your computer
-2. Navigate to this project folder
+2. Navigate to the `research-agent` project folder
 3. Start talking — no setup, no commands, no API key needed
 
-The agent is always ready. Just type what you want.
+Everything is in one project. Writing posts, planning calendars, and discovering keywords all happen here.
 
 ---
 
 ## 3. Select your brand
 
-Every session starts with a brand selection menu. The agent will always ask this first:
+Every session starts with a brand selection menu:
 
 ```
 ─────────────────────────────────────────────
@@ -61,34 +68,29 @@ Every session starts with a brand selection menu. The agent will always ask this
   1. Startup One — Your first startup description
   2. Startup Two — Your second startup description
 
-  Which brand is this post for?
+  Which brand is this for?
 ─────────────────────────────────────────────
 ```
 
-Reply with the number. Everything that follows — the brand voice, content library, keyword history, and audience data — comes from that brand's profile. Posts for different startups never mix.
+Reply with the number. Everything that follows — the brand voice, content library, keyword history, and audience data — comes from that brand's profile. Posts for different brands never mix.
 
 ---
 
-## 4. How to ask for a post
+## 4. Writing a post
 
-Type a plain sentence describing what you want. You don't need to use special syntax — just talk to it.
+### 4a. Basic request
 
-**Simple examples:**
+Type a plain sentence describing what you want. No special syntax required.
+
 ```
 Write a post about AI tools for small businesses
 Write a post about the future of remote work
-Write a post about how to build a second brain
-```
-
-**With optional parameters:**
-```
-Write a short post about startup fundraising
 Write a listicle about productivity tools for founders
+Write a short post about startup fundraising
 Write a post about AI in hiring, targeting "AI assessment tools" and "skills-based hiring"
-Write a post about burnout prevention [PAUSE_AFTER_OUTLINE]
 ```
 
-### All available options
+**All available options:**
 
 | What you want | How to say it | Default |
 |---|---|---|
@@ -98,25 +100,23 @@ Write a post about burnout prevention [PAUSE_AFTER_OUTLINE]
 | Tone | "informative", "conversational", "bold", "practical" | Brand guide default |
 | Audience | "for [description]" | Brand guide default |
 | Keywords | "targeting [keyword], [keyword]" | Agent decides |
-| Word count | "short", "standard", or "long" | Standard (~1,200–2,000 words) |
-| Review outline before writing | Add `[PAUSE_AFTER_OUTLINE]` to your request | Off |
-| Skip the alternative format | Add `[SKIP_ALT_FORMAT]` to your request | Off |
-| Include SEO research | Add `[SEO_BRIEF]` to your request | Off |
-| Plan a content calendar | Add `[CONTENT_CALENDAR]` to your request | Off |
-| Write from raw notes | Put `[FROM_NOTES]` on the first line, paste notes below | Off |
+| Word count | "short (~800–1,200)", "standard (~1,200–2,000)", "long (~2,000–2,500)" | Standard |
+| Review outline first | Add `[PAUSE_AFTER_OUTLINE]` | Off |
+| Skip alternative format | Add `[SKIP_ALT_FORMAT]` | Off |
+| SEO keyword research | Add `[SEO_BRIEF]` | Off |
 
 ---
 
-### 4a. Write about a URL or article
+### 4b. Write about a URL or article
 
-Paste any article link directly into your request. The agent will read the article and ask you one follow-up question before it starts:
+Paste any article link directly into your request:
 
 ```
 Write a post about this: https://example.com/some-article
 Can you write about this article? https://example.com/some-article
 ```
 
-After fetching the article, the agent will ask:
+The system fetches and reads the article, then asks one follow-up question before proceeding:
 
 ```
 ─────────────────────────────────────────────
@@ -135,96 +135,30 @@ After fetching the article, the agent will ask:
 ─────────────────────────────────────────────
 ```
 
-- **Reply A** — the post will open by referencing the article and engage with its arguments directly. Good for LinkedIn thought-leadership responses.
-- **Reply B** — the agent covers the same topic in your voice without mentioning the source article. Good when you want to own a topic without appearing reactive.
+- **Reply A** — the post opens by referencing the article and engages with its arguments directly. Good for thought-leadership responses.
+- **Reply B** — the system covers the same topic in your voice without mentioning the source article. Good when you want to own a topic without appearing reactive.
 
-Either way, the article becomes part of the research. The agent supplements it with additional sources and writes the post in your brand voice.
+Either way, the article becomes part of the research base. The system supplements it with additional sources and writes in your brand voice.
 
 ---
 
-### 4b. Write in Turkish or both languages
+### 4c. Write in Turkish or both languages
 
 ```
 Write a post about AI tools in Turkish
 Write a post about startup fundraising in both English and Turkish
+hem İngilizce hem Türkçe yaz
 ```
 
-In dual-language mode, both posts are written natively — the Turkish version is not a translation. They share the same research but have independent outlines, drafts, and editorial reviews. The Turkish post is written for a Turkish professional audience, with local examples and cultural context.
+In dual-language mode, both posts are written natively — the Turkish version is not a translation. They share research but have independent outlines, drafts, and editorial reviews. The Turkish post is written for a Turkish professional audience with local examples and cultural context.
+
+Output files are distinguished with language suffixes: `draft-en.md` and `draft-tr.md`.
 
 ---
 
-### 4c. Use SEO keyword research
+### 4d. Write from your raw notes
 
-Add `[SEO_BRIEF]` to your request to run keyword research before writing.
-
-**Discovery mode** — find keyword opportunities for your business:
-```
-Find keyword opportunities for my business [SEO_BRIEF]
-```
-The agent will present a ranked list of keyword opportunities and ask you to pick one before writing.
-
-**Enrichment mode** — research keywords for a specific topic you already have:
-
-```
-Write a post about AI hiring tools [SEO_BRIEF]
-```
-
-The agent runs keyword research scoped to your topic, then proceeds automatically.
-
----
-
-### 4d. Plan a 90-day content calendar
-
-Instead of writing one post, the agent can plan your entire next quarter — finding the best topics, sequencing them strategically, and saving everything so you can write posts one at a time whenever you're ready.
-
-```
-Create a 90-day content calendar [CONTENT_CALENDAR]
-Plan my next quarter of content [CONTENT_CALENDAR]
-```
-
-The agent will search for 25 potential topics across your brand's subject areas, then select and sequence the best 12 into a publishing plan. Each post in the plan gets:
-
-- A suggested publish date (one per week)
-- A specific keyword to target and why it's a good opportunity
-- A format recommendation (explainer, listicle, how-to, etc.)
-- The funnel stage it addresses (awareness, consideration, or decision)
-- A note on what existing competitor content is missing — your opening
-
-The agent also identifies **topic clusters**: a pillar post paired with 2–3 supporting posts that interlink. This is the most effective way to build authority on a subject over time.
-
-After the plan is ready, you'll see a table like this:
-
-```
-─────────────────────────────────────────────
-  90-DAY CONTENT CALENDAR — Patika.dev
-  Apr 15 – Jul 14, 2026  |  12 posts  |  2 topic clusters
-─────────────────────────────────────────────
-  #   Date      Title                              Format      Difficulty  Cluster
-  1   Apr 15    [title]                            Explainer   Easy        Pillar: AI Literacy
-  2   Apr 22    [title]                            Listicle    Easy        Standalone
-  3   Apr 29    [title]                            How-to      Medium      Supports #1
-  ...
-─────────────────────────────────────────────
-```
-
-**To write a post from the calendar**, just say which number you want:
-
-```
-write post 1
-write posts 1-3
-```
-
-The agent fills in the topic, keyword, format, and language automatically — you don't have to re-specify anything. After each post publishes, the calendar is updated to show it as complete.
-
-**Batch limit:** You can write up to 3 posts in one session. After the third, the agent will pause and ask if you want to continue.
-
-The calendar is saved to `files/calendar/{brand-slug}-calendar.json` and persists between sessions. You can come back to it any time.
-
----
-
-### 4e. Write from your notes
-
-This is the fastest way to start a post. Instead of describing a topic, you paste whatever you already have — raw thoughts, a voice memo transcript, a brain dump, a LinkedIn comment you wrote — and the agent extracts the post from your own words.
+The fastest way to start a post. Instead of describing a topic, paste whatever you already have — raw thoughts, a voice memo transcript, a brain dump, a LinkedIn comment, an email you wrote.
 
 Put `[FROM_NOTES]` on the first line, then paste your notes below:
 
@@ -236,7 +170,7 @@ before they know if basic criteria are met. We made this mistake at my last comp
 Cost us two months of wasted pipeline. There has to be a better sequencing.
 ```
 
-The agent will read your notes, extract what it finds, and show you a summary before doing anything:
+The system extracts a topic, thesis, key points, and personal material, then shows you a summary before doing anything:
 
 ```
 ─────────────────────────────────────────────
@@ -263,54 +197,166 @@ The agent will read your notes, extract what it finds, and show you a summary be
 
 Reply **Y** to proceed, **E** to adjust the topic or thesis, or **N** to cancel.
 
-Once you confirm, the pipeline runs exactly as normal — research, outline, writing, QA. The difference is that your notes become the anchor research file. Your personal stories and specific phrases are flagged as mandatory content that the writer must include. The research agents focus on corroborating and deepening what you already know, not replacing it.
-
-The result is a post that starts from your thinking, in your voice, with your experience at its centre — supplemented with verified facts and sources.
+Your notes become the anchor research file. Personal stories and specific phrases are flagged as mandatory content that the writer must include. Research agents focus on corroborating and deepening what you already know, not replacing it.
 
 **What works well as notes:**
-
 - A few paragraphs of free writing about something you observed or experienced
 - A voice memo transcript (paste the text)
 - A LinkedIn comment thread where you made a substantive point
 - An email you wrote to a client or colleague explaining something
-- Even bullet points — "I want to cover: X, Y, Z"
+- Even bullet points: "I want to cover: X, Y, Z"
 
-The notes don't need to be polished. The messier and more specific they are, the better the output.
+The notes don't need to be polished. The messier and more specific, the better the output.
 
 ---
 
-## 4. What happens while the agent runs
+### 4e. SEO keyword enrichment
 
-After you send your request, everything runs automatically. Here is what is happening at each stage:
+Add `[SEO_BRIEF]` to any writing request to run keyword research scoped to your topic before the outline is built:
+
+```
+Write a post about AI hiring tools [SEO_BRIEF]
+Write a post about remote work productivity [SEO_BRIEF]
+```
+
+The system researches keyword opportunities for your specific topic, selects the best keyword, and feeds that targeting into the outline and QA review. The post is optimised for that keyword from the start rather than retrofitting it during editing.
+
+For keyword *discovery* (finding topics to write about, not enriching a topic you already have), see [Section 5c](#5c-seo-keyword-discovery).
+
+---
+
+### 4f. Review the outline before writing
+
+Add `[PAUSE_AFTER_OUTLINE]` to any request to see the structure before writing begins:
+
+```
+Write a post about AI in hiring [PAUSE_AFTER_OUTLINE]
+```
+
+After the outline is built, the system will print the section headings with one-line descriptions and stop. Reply with "looks good" or "continue" to proceed, or give feedback to adjust the structure. Nothing is written until you approve.
+
+---
+
+## 5. Content calendar
+
+### 5a. Generate a 90-day calendar
+
+Plan your entire next quarter — finding the best topics, sequencing them strategically, and saving everything so you can write posts one at a time whenever you're ready.
+
+```
+Create a 90-day content calendar [CONTENT_CALENDAR]
+Plan my next quarter of content [CONTENT_CALENDAR]
+```
+
+The system searches for 25 potential topics across your brand's subject areas, then selects and sequences the best 12 into a publishing plan. Each post in the plan gets:
+
+- A suggested publish date (one per week)
+- A specific keyword to target and why it's a good opportunity
+- A format recommendation (explainer, listicle, how-to, etc.)
+- The funnel stage it addresses (awareness, consideration, or decision)
+- A note on what existing competitor content is missing — your opening
+
+The system also identifies **topic clusters**: a pillar post paired with 2–3 supporting posts that interlink. This is the most effective way to build authority on a subject over time.
+
+After the plan is ready, you'll see a table like this:
+
+```
+─────────────────────────────────────────────
+  90-DAY CONTENT CALENDAR — Brand Name
+  Apr 15 – Jul 14, 2026  |  12 posts  |  2 topic clusters
+─────────────────────────────────────────────
+  #   Date      Title                              Format      Difficulty  Cluster
+  1   Apr 15    [title]                            Explainer   Easy        Pillar: AI Literacy
+  2   Apr 22    [title]                            Listicle    Easy        Standalone
+  3   Apr 29    [title]                            How-to      Medium      Supports #1
+  ...
+─────────────────────────────────────────────
+  FUNNEL:    5 awareness · 4 consideration · 3 decision
+  CLUSTERS:  2 identified
+  LANGUAGES: 3 Turkish · 9 English
+─────────────────────────────────────────────
+  Say "write post 1" to start, or "write posts 1–3" to batch.
+─────────────────────────────────────────────
+```
+
+The calendar is saved to `files/calendar/{brand-slug}-calendar.json` and persists between sessions.
+
+---
+
+### 5b. Write posts from the calendar
+
+Once a calendar exists for a brand, say which post number you want to write:
+
+```
+write post 1
+write posts 1-3
+```
+
+The system fills in the topic, keyword, format, and language automatically from the calendar — you don't need to re-specify anything. After each post publishes, the calendar is updated to mark it complete with the output path and QA score.
+
+**Batch limit:** Up to 3 posts in one session. After the third, the system pauses and asks if you want to continue.
+
+---
+
+### 5c. SEO keyword discovery
+
+Find the best keyword opportunities for your brand before you've decided what to write:
+
+```
+Find keyword opportunities [SEO_BRIEF]
+Find keyword opportunities for AI productivity tools [SEO_BRIEF]
+```
+
+The system researches and ranks the top 10 keyword opportunities based on your brand's subject areas, audience, and competitor gaps. Results are presented as a ranked list with difficulty and priority scores. The full opportunity data is saved to `files/seo/keyword-opportunities.json`.
+
+To write a post targeting one of the discovered keywords:
+
+```
+Write a post about [keyword] [SEO_BRIEF]
+```
+
+---
+
+## 6. What happens during a run
+
+After you send your request, everything runs automatically.
+
+### Brand routing (instant)
+The orchestrator reads your message, matches your intent to the right coordinator (writing or planning), and delegates — passing your brand context along.
 
 ### Planning (seconds)
-The agent reads your request, breaks the topic into 3–5 research angles, checks your content library for prior coverage, and loads your brand guide and voice profile.
+The writing coordinator reads your request, breaks the topic into 3–5 research angles, checks your content library for prior coverage, and loads your brand guide and voice profile.
 
 ### Research (1–3 minutes)
-One researcher per angle runs simultaneously, gathering facts, statistics, and sources. If you provided a source URL, its content is included alongside the research. Every finding gets a confidence rating so the agent knows which claims are well-supported.
+One researcher per angle runs simultaneously, gathering facts, statistics, and sources. Every finding gets a confidence score. If you provided a source URL or raw notes, that content is included alongside web research.
 
 ### Conflict resolution (seconds)
-Before writing, the agent scans all research files for contradictory statistics. When two sources disagree on a number, the higher-confidence value wins and the discrepancy is noted.
+Before writing, the coordinator scans all research for contradictory statistics. When two sources disagree, the higher-confidence value wins and the discrepancy is noted.
 
 ### Outline (30–60 seconds)
-An outline agent reads all research and builds a structured plan: section headings, key points, which facts belong where, and keyword placement.
+An outline agent reads all research and builds a structured plan: section headings, key points, which facts belong where, and keyword placement. The coordinator validates the outline structure before proceeding.
 
-> **If you added `[PAUSE_AFTER_OUTLINE]`:** The agent will print the outline and stop here. Reply with "looks good" or "continue" to proceed, or give feedback to adjust the structure before writing begins.
+> **If you added `[PAUSE_AFTER_OUTLINE]`:** The system prints the outline and stops here. Reply to proceed or to adjust the structure.
 
 ### Writing (1–2 minutes)
 The writer drafts the full post following the outline. Every factual claim gets a citation placeholder. The writer also produces a metadata file and a citation map.
 
 ### Quality review (30–60 seconds)
 Four reviewers run simultaneously:
-- **Section reviewer** — scores each section independently for voice, argument clarity, and fact density
+- **Section reviewer** — scores each section for voice, argument clarity, and fact density
 - **Editor** — evaluates the full post for coherence, structure, and citation completeness
 - **SEO agent** — checks keyword coverage, heading structure, and readability
-- **Brand checker** — validates every hard rule in your brand guide
+- **Brand checker** — validates every rule in your brand guide
 
-A composite score (0–100) is computed. Posts below 85 are revised automatically. Posts below 65 after a full rewrite are not published.
+A composite score (0–100) is computed from all four.
 
 ### Revisions (if needed)
-If the score is 65–84, the agent revises the draft and re-reviews. It does this at most twice. If a factual claim is flagged as potentially unverifiable, the agent pauses and asks you whether to continue before publishing.
+- Score **85–100**: proceed directly to publishing
+- Score **65–84**: the coordinator assembles a prioritised revision list and respawns the writer (max 2 revision passes)
+- Score **below 65**: full re-draft from the outline (max 1 re-draft)
+- Score **below 65 after re-draft**: the branch is halted and not published
+
+If a factual claim is flagged as potentially unverifiable (confidence ≥ 0.7), the system pauses and asks you whether to continue before publishing.
 
 ### Publishing (30–60 seconds)
 The publisher writes the final post, social copy, email teaser, and A/B variants to `files/output/`. The content library and audience model are updated.
@@ -320,7 +366,7 @@ Using the same research, a second version is produced in a different format (e.g
 
 ---
 
-## 5. Your output files — what you get
+## 7. Your output files
 
 All files land in `files/output/` with a shared date-and-slug prefix. For a post about AI hiring tools published on 1 April 2026:
 
@@ -335,12 +381,8 @@ files/output/
 
 For dual-language runs, Turkish files get a `-tr` suffix.
 
-### Content calendar (`files/calendar/`)
-
-If you generated a content calendar, it lives at `files/calendar/{brand-slug}-calendar.json`. This file is updated in place as you write posts from it — completed posts are marked with their output path and QA score. You can come back to it in any future session and pick up where you left off.
-
 ### The blog post (`.md`)
-A Markdown file ready to paste into your CMS (WordPress, Webflow, Ghost, Substack, etc.). Contains front matter metadata, the full post body, and a numbered reference list at the bottom.
+A Markdown file ready to paste into your CMS (WordPress, Webflow, Ghost, Substack, etc.). Contains front matter with metadata including the QA composite score, the full post body, and a numbered reference list.
 
 ### Social copy (`-social.json`)
 Ready-to-post copy for three platforms:
@@ -351,16 +393,33 @@ Ready-to-post copy for three platforms:
 Replace `CTA_URL` in each file with the live URL once the post is published.
 
 ### Email teaser (`-email.json`)
-Everything you need for a newsletter send: subject line, preview text, body copy, and CTA. Subject line is under 60 characters; preview text under 90.
+Subject line (under 60 characters), preview text (under 90 characters), body copy, and CTA — everything you need for a newsletter send.
 
 ### A/B variants (`-variants.json`)
-Two headline and meta-description combinations for split testing — Variant A is the published title; Variant B is a genuinely different angle (a surprising statistic, a contrarian take, or outcome-led framing).
+Two headline and meta-description combinations for split testing. Variant A is the published title; Variant B is a genuinely different angle.
+
+### Content calendar (`files/calendar/`)
+If you generated a calendar, it lives at `files/calendar/{brand-slug}-calendar.json`. This file is updated in place as you write posts from it — completed posts are marked with their output path, publish date, and QA score.
+
+### Draft artefacts (`files/drafts/`)
+Intermediate files written during a run. Useful for diagnostics:
+
+| File | Contents |
+|---|---|
+| `draft.md` | The working draft |
+| `draft-meta.json` | Title, word count, format, keywords |
+| `outline.json` | Section structure and fact assignments |
+| `editorial-report.json` | Editor's full evaluation |
+| `seo-analysis.json` | Keyword coverage, readability, meta suggestions |
+| `brand-report.json` | Brand guide compliance check |
+| `section-review.json` | Per-section scores and suggested fixes |
+| `citations.json` | All cited sources |
 
 ---
 
-## 6. Reviewing and rating a post
+## 8. Reviewing and rating a post
 
-After each run completes, the agent will show you a review prompt:
+After each run completes, the system presents a review prompt:
 
 ```
 ─────────────────────────────────────────────
@@ -384,101 +443,250 @@ After each run completes, the agent will show you a review prompt:
 ─────────────────────────────────────────────
 ```
 
-You can answer all of it, some of it, or just press Enter to skip. Your ratings are saved to `files/feedback/` and feed into the audience model — the agent uses this data to produce better posts over time.
+You can answer all of it, some of it, or press Enter to skip. Ratings are saved to `files/feedback/` and feed directly into the audience model.
 
 ---
 
-## 8. Setting up a brand
+## 9. How the system learns
 
-Each startup has its own profile folder under `brands/`. The agent reads these files fresh at the start of every run.
+The system maintains three persistent learning artefacts per brand, updated after every run:
 
-### Adding or renaming a startup
+### Voice profile (`brands/{slug}/voice.skill`)
+
+When a post scores 87 or above (or 85+ with positive feedback), the system selects the single best paragraph from that post — one that most distinctly captures the brand voice — and appends it as a numbered example to the voice profile.
+
+Before any update, the current voice file is automatically backed up to `brands/{slug}/voice-snapshots/voice-{timestamp}.skill`. If a voice update ever produces worse results, you can restore the previous version from a snapshot.
+
+The voice profile holds a maximum of 5 examples at a time. When a 6th is added, the lowest-scoring example is removed. Over time the examples represent only the best writing the system has seen for this brand.
+
+You can also add your own examples manually — paste any paragraph from a post you're proud of into the **Examples** section of the voice profile.
+
+### Audience model (`brands/{slug}/audience-model.json`)
+
+After every published post, a signal is appended: the format used, keywords targeted, language, QA score, and your feedback score (if given). Over time:
+
+- Formats that score well consistently get promoted to `topPerformingFormats` — the system defaults to these when you don't specify a format
+- Keywords that appear in high-scoring posts get promoted to `topPerformingKeywords` — the system adds these to keyword targeting automatically
+
+The threshold for promotion is 3 posts with feedback score ≥ 4.0 (or QA score ≥ 85 where no feedback exists).
+
+### Content library (`brands/{slug}/content-library.json`)
+
+Updated after every published post with title, slug, summary, and keywords. Used to detect prior coverage — the outline agent receives this list and is instructed to differentiate from angles already covered.
+
+---
+
+## 10. Setting up a brand
+
+Each brand has its own folder under `brands/`. The system reads these files fresh at the start of every run.
+
+### Adding a new brand
 
 Open `brands/index.json` and add an entry:
 
 ```json
 {
   "brands": [
-    { "slug": "my-startup", "name": "My Startup", "description": "One-line description" }
+    { "slug": "my-startup", "name": "My Startup", "description": "One-line description shown in the selection menu" }
   ]
 }
 ```
 
-Then create a folder `brands/my-startup/` with four files — copy the template from `brands/startup-one/` as a starting point.
+Then create `brands/my-startup/` with four files — copy any existing brand folder as a template.
 
-### `brands/{name}/brand-guide.json`
+### `brand-guide.json`
 
-The rules for every post from this brand. The fields that matter most:
+The rules every post must follow. The fields that matter most:
 
 | Field | What to fill in |
 |---|---|
 | `voice` | One sentence: how this brand writes |
 | `targetAudience` | Who the readers are |
 | `tone` | 3–5 tone words |
-| `hardConstraints` | Rules the agent must never break |
+| `hardConstraints` | Rules the system must never break (blocker-level) |
 | `avoidTopics` | Topics to refuse entirely |
+| `seoContext.keyTopicAreas` | Subject areas for calendar research and keyword discovery |
+| `seoContext.competitorTypes` | What kinds of competitors to search for gaps against |
 
-### `brands/{name}/voice.skill`
+### `voice.skill`
 
-The detailed voice profile for the founder or author writing for this brand. This is the most important file to fill in well — it controls how every post sounds.
+The detailed voice profile — the most important file for output quality. It controls how every post sounds.
 
-Open the template and replace the placeholder sections with:
-
-- A description of who the writer is
-- How their posts typically open
+Fill in:
+- A description of who the writer is and their professional context
+- How their posts typically open (first sentence patterns)
 - What makes their perspective distinctive
 - Phrases and habits characteristic of their writing
-- Things they would never write
+- Things they would never write (anti-patterns)
 
-The **Examples** section at the bottom is populated automatically — every time a post scores 85 or above, the agent appends the best paragraph as a real example. You can also paste in paragraphs from posts you're proud of.
+The **Examples** section at the bottom is populated automatically. You can also seed it manually by pasting paragraphs from posts you're proud of.
 
-### `brands/{name}/content-library.json` and `audience-model.json`
+### `audience-model.json`
 
-Both are maintained automatically. The content library tracks every published post (used to avoid repeating topics). The audience model tracks which formats and keywords perform best — add an `engagementScore` (0–100) to any entry after a post goes live to help the agent learn what works.
+Maintained automatically. You can manually add an `engagementScore` (0–100) to any past-post signal to help the system learn what performed well before the system was set up.
 
----
+### `content-library.json`
 
-## 9. Tips for best results
-
-**Be specific, but not too narrow.** "AI tools for small businesses" will produce a broad survey. "How small e-commerce businesses are using AI to reduce customer service costs" will produce a focused, actionable post. But going too narrow (a single company, a two-year window) limits what the researchers can find.
-
-**Use URLs when you have a source.** If you've read an article you want to respond to or build on, paste the link. It's faster than describing it, and the agent will read the full article rather than guessing what it says.
-
-**Name the audience.** "For HR managers evaluating new tools" shapes every word choice, example, and recommendation. Without it, the agent falls back to your brand guide default.
-
-**Add feedback after posts go live.** The audience model only becomes useful when you give it signal. A minute spent rating a post after it publishes is worth several future runs that automatically avoid formats or angles that didn't land.
-
-**Don't edit the draft before reading the editorial report.** The draft is at `files/drafts/draft.md` and the report is at `files/drafts/editorial-report.json`. If a section surprised you, the report will explain the agent's reasoning before you start making changes.
-
-**Use `[PAUSE_AFTER_OUTLINE]`** when you want to review the structure before a long run. It's a one-second addition that lets you redirect before the writing starts rather than after.
+Maintained automatically. Each entry represents one published post and is used to avoid repeating covered angles.
 
 ---
 
-## 10. Troubleshooting
+## 11. System architecture
 
-### The agent pauses and asks about "factual flags"
-The editor found one or more claims it considers potentially unverifiable. The agent will describe each flagged claim and ask whether to continue.
+This section is for understanding how the system is structured — useful if something goes wrong or you want to extend it.
+
+### Overview
+
+The system uses a **thin orchestrator + coordinator subagents** pattern:
+
+```
+CLAUDE.md (orchestrator)
+  ├── Reads brands/index.json → shows brand menu
+  ├── Reads .claude/capabilities.json → matches intent
+  └── Spawns coordinator subagent
+        ├── writing-coordinator.md  (Steps 0–11: research → outline → write → QA → publish)
+        └── planning-coordinator.md (calendar generation, SEO discovery)
+              └── Each spawns its own leaf agents:
+                    researcher, outline, writer, editor, seo,
+                    section-reviewer, brand-checker, publisher,
+                    voice-curator, notes-parser, calendar-researcher,
+                    calendar-strategist
+```
+
+**CLAUDE.md is only 2k characters.** It does nothing except brand selection and routing. All pipeline logic lives in coordinator subagent files, which only load into context when needed.
+
+### Routing
+
+Intent is matched against `.claude/capabilities.json`. Adding a new capability (e.g. social post generation) means adding a new coordinator file and one entry in `capabilities.json` — the orchestrator never changes.
+
+### Shared state (file-based memory)
+
+Agents communicate exclusively through files. There is no in-memory state shared between agents.
+
+| Layer | Location | Lifespan | Contents |
+|---|---|---|---|
+| Run state | `files/run-config.json`, `files/checkpoint.json`, `files/research/*.json`, `files/drafts/*` | One run | Topic config, research findings, draft artefacts |
+| Planning state | `files/calendar/{brand}-calendar.json`, `files/seo/` | Until replaced | Content calendar, keyword briefs |
+| Brand memory | `brands/{slug}/voice.skill`, `audience-model.json`, `content-library.json` | Permanent, grows | Voice examples, performance signals, post history |
+| Voice backups | `brands/{slug}/voice-snapshots/` | Permanent | One snapshot per voice update, for rollback |
+
+### File contracts
+
+Inter-agent file formats are documented in `.claude/contracts/`. Each schema file defines the required fields and types for one shared artefact. The writing coordinator validates each file against its contract before passing it to the next agent.
+
+| Contract | File it validates |
+|---|---|
+| `run-config.schema.json` | `files/run-config.json` |
+| `research-file.schema.json` | `files/research/{slug}.json` |
+| `outline.schema.json` | `files/drafts/outline[-lang].json` |
+| `draft-meta.schema.json` | `files/drafts/draft-meta[-lang].json` |
+
+### Project layout
+
+```
+research-agent/
+  .claude/
+    CLAUDE.md                      ← orchestrator (brand selection + routing)
+    capabilities.json              ← intent routing table
+    subagents/
+      writing-coordinator.md       ← full writing pipeline (Steps 0–11)
+      planning-coordinator.md      ← calendar + SEO discovery
+      researcher.md
+      outline.md
+      writer.md
+      editor.md
+      section-reviewer.md
+      seo.md
+      brand-checker.md
+      publisher.md
+      voice-curator.md
+      notes-parser.md
+      calendar-researcher.md
+      calendar-strategist.md
+    contracts/
+      run-config.schema.json
+      research-file.schema.json
+      outline.schema.json
+      draft-meta.schema.json
+    skills/
+      seo-keyword-brief.skill
+  brands/
+    index.json
+    startup-one/
+      brand-guide.json
+      voice.skill
+      audience-model.json
+      content-library.json
+      voice-snapshots/             ← automatic backups before each voice update
+  files/
+    run-config.json
+    checkpoint.json
+    research/
+    drafts/
+    output/
+    calendar/
+    seo/
+    feedback/
+```
+
+---
+
+## 12. Tips for best results
+
+**Be specific, but not too narrow.** "AI tools for small businesses" produces a broad survey. "How small e-commerce businesses are using AI to reduce customer service costs" produces a focused, actionable post. But going too narrow (a single company, a two-year window) limits what researchers can find.
+
+**Use URLs when you have a source.** If you've read an article you want to respond to or build on, paste the link. It's faster than describing it, and the system reads the full article rather than guessing at its contents.
+
+**Name the audience.** "For HR managers evaluating new tools" shapes every word choice, example, and recommendation. Without it, the system falls back to your brand guide default.
+
+**Add feedback after posts go live.** The audience model only becomes useful when you give it signal. A minute spent rating a post after it publishes is worth several future runs — the system automatically avoids formats or angles that didn't land.
+
+**Seed the voice profile early.** Before you've run enough posts for the automatic example collection to build up, paste 2–3 paragraphs from your actual best writing into the Examples section of `brands/{slug}/voice.skill`. This gives the writer a concrete target immediately.
+
+**Use `[PAUSE_AFTER_OUTLINE]`** when you want to redirect before a long run. It costs one extra round-trip but prevents wasted writing if the structure is going in the wrong direction.
+
+**Use `[FROM_NOTES]` for opinion and experience posts.** The system is at its best when your perspective is the starting point. Research agents are good at finding evidence but only you can provide the original observation.
+
+**Generate a calendar quarterly.** The calendar researcher searches for real keyword opportunities and competitor gaps at the time it runs. A calendar older than 3 months may be pointing at topics where the competitive landscape has changed.
+
+---
+
+## 13. Troubleshooting
+
+### The system pauses and asks about "factual flags"
+The editor found one or more claims it considers potentially unverifiable. The system describes each flagged claim and asks whether to continue.
 - If you recognise the claim and trust it, reply `continue`
 - If you're unsure, reply `stop` — then review `files/drafts/draft.md` and `files/drafts/editorial-report.json` before deciding
 
 ### The post doesn't sound like my voice
-Open `.claude/skills/gulcan-voice.skill` and:
-1. Look at the **Anti-Patterns** section — add any phrases or habits you want to explicitly avoid
+Open `brands/{slug}/voice.skill` (where `{slug}` is your brand's folder name) and:
+1. Look at the **Anti-Patterns** section — add any phrases or habits you want explicitly avoided
 2. Look at the **Examples** section — paste in a paragraph or two from your best actual writing
 3. Be specific: "uses 1–2 rhetorical questions per section" is more useful than "sounds conversational"
+4. If a recent automatic example made things worse, restore the voice file from `brands/{slug}/voice-snapshots/` and delete the bad example
 
 ### The output folder is empty after a run
-If the agent completed but nothing appeared in `files/output/`, check:
-- The terminal output — if the editorial score fell below 65 after a full rewrite, the agent refuses to publish and explains why
+If the system completed but nothing appeared in `files/output/`, check:
+- The terminal output — if the editorial score fell below 65 after a full re-draft, the system refuses to publish and explains why
 - `files/drafts/editorial-report.json` for details on what failed
+- `files/drafts/brand-report.json` — a brand constraint violation that blocks publishing will be flagged here
 
-### The agent stopped mid-run
-The agent prints a clear description of what failed and at which stage. It writes a checkpoint to `files/checkpoint.json` as it runs — this file shows how far it got. Common causes:
-- **Network issue** — the agent retries automatically; if it fails after multiple retries, check your connection and try again
-- **Research failure** — if fewer than two research files were produced with sufficient findings, the agent halts and reports the gap
+### The system stopped mid-run
+The system prints a clear description of what failed and at which stage. Check `files/checkpoint.json` to see how far the run got. Common causes:
+- **Research failure** — if fewer than two research files were produced with sufficient findings, the run halts. This usually means the topic is too niche for web search to find credible sources. Try broadening the topic slightly.
+- **Outline validation failure** — the outline agent failed to produce a valid structure after two attempts. Check `files/drafts/outline.json` for what was returned.
+- **Network issue** — the agent retries automatically; if it fails after retries, check your connection and start a new run
+
+### The calendar file is missing
+If you say "write post 3" and the system can't find a calendar file, it means either:
+- You haven't generated a calendar for this brand yet — say `Create a 90-day content calendar [CONTENT_CALENDAR]`
+- You selected a different brand at the start of the session than the one the calendar was generated for
+
+### I want to revert a voice profile change
+Voice snapshots are written automatically to `brands/{slug}/voice-snapshots/` before every update. Open the snapshots folder, find the file dated before the change you want to undo, and copy its contents back to `brands/{slug}/voice.skill`.
 
 ### I want to re-run a specific stage
-The agent doesn't currently support resuming from a checkpoint mid-run. If a run fails partway through, start a new run with the same request — research is fast and the output files will overwrite cleanly.
+The system doesn't currently support resuming from a checkpoint mid-run. Start a new run with the same request — research is fast and output files overwrite cleanly. The `[PAUSE_AFTER_OUTLINE]` flag is the best tool for catching problems before writing starts.
 
 ---
 

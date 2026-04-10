@@ -7,7 +7,23 @@
       "Glob(*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git rm:*)",
+      "Bash(cp -r /Users/danielkapper/Projects/research-agent/brands/startup-one /Users/danielkapper/Projects/research-agent/brands/startup-two)",
+      "Bash(sed -i '' 's/startup-one/startup-two/g; s/Startup One/Startup Two/g' /Users/danielkapper/Projects/research-agent/brands/startup-two/brand-guide.json /Users/danielkapper/Projects/research-agent/brands/startup-two/voice.skill)",
+      "WebFetch(domain:www.patika.dev)",
+      "WebFetch(domain:www.risein.com)",
+      "WebFetch(domain:jobnest.ai)",
+      "Bash(cp:*)",
+      "WebFetch(domain:www.talkparty.app)",
+      "Bash(ls /Users/danielkapper/Projects/research-agent/*.md)",
+      "Bash(mkdir -p /Users/danielkapper/Projects/blog-planner/.claude/subagents /Users/danielkapper/Projects/blog-planner/.claude/skills)",
+      "Bash(ln -s ../research-agent/brands /Users/danielkapper/Projects/blog-planner/brands)",
+      "Bash(ln -s ../research-agent/files /Users/danielkapper/Projects/blog-planner/files)",
+      "Bash(cp /Users/danielkapper/Projects/research-agent/.claude/subagents/calendar-researcher.md /Users/danielkapper/Projects/blog-planner/.claude/subagents/)",
+      "Bash(cp /Users/danielkapper/Projects/research-agent/.claude/subagents/calendar-strategist.md /Users/danielkapper/Projects/blog-planner/.claude/subagents/)",
+      "Bash(cp /Users/danielkapper/Projects/research-agent/.claude/skills/seo-keyword-brief.skill /Users/danielkapper/Projects/blog-planner/.claude/skills/)",
+      "WebSearch"
     ]
   }
 }

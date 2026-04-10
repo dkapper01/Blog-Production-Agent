@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DraftMeta",
+  "description": "Written by writer subagent alongside the draft. Path: files/drafts/draft-meta[-lang].json. Coordinator reads wordCount for pre-QA validation.",
+  "owner": "writer (leaf agent)",
+  "type": "object",
+  "required": ["slug", "title", "wordCount", "language", "format"],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "wordCount": { "type": "integer", "minimum": 1 },
+    "language": { "type": "string", "enum": ["en", "tr"] },
+    "format": { "type": "string", "enum": ["explainer", "how-to", "listicle", "opinion", "case-study"] },
+    "keywords": { "type": "array", "items": { "type": "string" } },
+    "metaDescription": { "type": "string" },
+    "readingTimeMinutes": { "type": "number" }
+  }
+}

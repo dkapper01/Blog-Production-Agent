@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Outline",
+  "description": "Written by outline subagent. Path: files/drafts/outline[-lang].json. Coordinator validates structure before spawning writers.",
+  "owner": "outline (leaf agent)",
+  "type": "object",
+  "required": ["thesis", "slug", "sections", "wordCountBudget"],
+  "properties": {
+    "thesis": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "differentiationNotes": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["heading", "type", "keyPoints", "targetFacts", "estimatedWordCount"],
+        "properties": {
+          "heading": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "enum": ["introduction", "body", "conclusion"] },
+          "keyPoints": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "targetFacts": { "type": "array", "items": { "type": "string" } },
+          "estimatedWordCount": { "type": "integer", "minimum": 50 }
+        }
+      }
+    },
+    "wordCountBudget": {
+      "type": "object",
+      "required": ["introduction", "body", "conclusion", "total"],
+      "properties": {
+        "introduction": { "type": "integer" },
+        "body": { "type": "integer" },
+        "conclusion": { "type": "integer" },
+        "total": { "type": "integer" }
+      }
+    }
+  }
+}

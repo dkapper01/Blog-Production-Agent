@@ -1,0 +1,31 @@
+{
+  "topic": "What makes a good forward deployed engineer",
+  "languages": ["en"],
+  "format": null,
+  "tone": null,
+  "keywords": [],
+  "wordCountTarget": "standard",
+  "wordCountRange": { "min": 1200, "max": 2000 },
+  "pauseAfterOutline": false,
+  "skipAltFormat": false,
+  "subtopics": [
+    "The operator mindset: how great FDEs think and make decisions under pressure",
+    "The FDE as a product-field bridge: translating field intelligence back to the engineering team",
+    "Learning and compounding across deployments: how the best FDEs improve exponentially"
+  ],
+  "priorCoverage": [
+    {
+      "title": "The Skills You Actually Need to Become a Forward Deployed Engineer",
+      "slug": "forward-deployed-engineer-skills",
+      "angle": "Role definition, technical skills (full-stack, systems integration), communication, ambiguity tolerance, Palantir Deployment Exercise, career path and compensation",
+      "keywords": ["forward deployed engineer", "FDE skills", "how to become a forward deployed engineer", "Palantir forward deployed engineer", "field engineer career"]
+    },
+    {
+      "title": "7 Skills That Separate a Great Forward Deployed Engineer from a Great Software Engineer",
+      "slug": "forward-deployed-engineer-skills-listicle",
+      "angle": "7 differentiating skills: systems integration, rapid prototyping, executive communication, adoption management, ambiguity tolerance, influence without authority, operator mindset",
+      "keywords": ["forward deployed engineer", "FDE skills", "Palantir forward deployed engineer", "FDE vs software engineer", "field engineer career"]
+    }
+  ],
+  "createdAt": "2026-04-08T00:00:00.000Z"
+}
